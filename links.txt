@@ -1,0 +1,27 @@
+
+example: to view a rule of the author's rule: https://commons.wikimedia.org/wiki/Enigma_machine#/media/File:Enigma-plugboard.jpg
+		 try to download it will pop up the rule.
+
+[Introduction] [1]. plain: By Bob Lord - German Enigma Machine, uploaded in english wikipedia on 16. Feb. 2005 by en:User:Matt Crypto, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=258976
+		            Html: By Bob Lord - <a rel="nofollow" class="external text" href="http://www.ilord.com/enigma.html">German Enigma Machine</a>, uploaded in english wikipedia on 16. Feb. 2005 by <a href="//en.wikipedia.org/wiki/User:Matt_Crypto" class="extiw" title="en:User:Matt Crypto">en:User:Matt Crypto</a>, <a href="http://creativecommons.org/licenses/by-sa/3.0/" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>, https://commons.wikimedia.org/w/index.php?curid=258976
+	           [2]. http://lucattelli.com/talks/enig-en/(2006-2016 Bruno Lucattelli)
+	           [3]. Plain: By Punishar - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=48423083
+			        Html:By <a href="//commons.wikimedia.org/wiki/User:Punishar" title="User:Punishar">Punishar</a> - <span class="int-own-work" lang="en">Own work</span>, <a href="http://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0">CC BY-SA 4.0</a>, https://commons.wikimedia.org/w/index.php?curid=48423083
+	           [4]. plain: CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=88679
+		            Html: <a href="http://creativecommons.org/licenses/by-sa/3.0/" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>, https://commons.wikimedia.org/w/index.php?curid=88679
+[Mechanics] 
+			   [5]. https://en.wikipedia.org/wiki/Enigma_machine
+			   [6]. https://en.wikipedia.org/wiki/Cryptanalysis_of_the_Enigma#cite_note-3
+			   [7]. plain: CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=23793
+                    Html: <a href="http://creativecommons.org/licenses/by-sa/3.0/" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>, https://commons.wikimedia.org/w/index.php?curid=23793
+               [8]. Crypto Museum, 2009, http://www.cryptomuseum.com/crypto/enigma/img/exploded.gif
+               [9]. plain: By en:User:Wapcaplet - uploaded in english wikipedia on 30. Jul. 2004 by author, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=258985
+                    Html: By <a href="//en.wikipedia.org/wiki/User:Wapcaplet" class="extiw" title="en:User:Wapcaplet">en:User:Wapcaplet</a> - uploaded in english wikipedia on 30. Jul. 2004 by author, <a href="http://creativecommons.org/licenses/by-sa/3.0/" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>, https://commons.wikimedia.org/w/index.php?curid=258985
+               [10].plain: By Created by Wapcaplet in Blender. - Uploaded by Wapcaplet to the English Wikipedia, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=23791
+                    Html: By Created by <a href="//en.wikipedia.org/wiki/User:Wapcaplet" class="extiw" title="en:User:Wapcaplet">Wapcaplet</a> in <a href="//commons.wikimedia.org/wiki/Blender_(program)" title="Blender (program)" class="mw-redirect">Blender</a>. - Uploaded by <a href="//en.wikipedia.org/wiki/User:Wapcaplet" class="extiw" title="en:User:Wapcaplet">Wapcaplet</a> to the <a href="//en.wikipedia.org/wiki/Main_Page" class="extiw" title="en:Main Page">English Wikipedia</a>, <a href="http://creativecommons.org/licenses/by-sa/3.0/" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>, 
+			        https://commons.wikimedia.org/w/index.php?curid=23791
+			
+			   [11].Copyright © 2009 Terry Long, href:http://www.terrylong.org/images/screenshots/2.png
+			   [12]. Tony Sale, href:http://www.codesandciphers.org.uk/enigma/rotorspec.html
+			   [13].https://en.wikipedia.org/wiki/Enigma_rotor_details
+            

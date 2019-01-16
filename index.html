@@ -1,0 +1,3466 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+            <title>Enigma Simulator</title>
+            <script src="js/embedskulptor.js"></script>
+            <script src="js/numeric-1.2.6.min.js" type="text/javascript"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+            <style>
+                body {
+                    margin: 0;
+                }
+            p, li{
+                font-size: 1.1em;
+            }
+            #nav{
+                z-index: 1000;
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                width: 15%;
+                background-color: #4D4D4D;
+                position: fixed;
+                height: 100%;
+                overflow: none;
+            }
+            
+            li a {
+                display: block;
+                color: White;
+                padding: 8px 0 8px 16px;
+                text-decoration: none;
+            }
+            
+            li a.active {
+                background-color: #4CAF50;
+                color: white;
+                
+            }
+            
+            li a:hover:not(.active) {
+                background-color: #222;
+                color: white;
+                text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 6px darkblue;
+            }
+            
+            #logo_name{
+                text-decoration: none;
+                #position: absolute;
+                top: 0 px;
+                font-size: 2.2em;
+                letter-spacing: -1px;
+                word-spacing: 5px;
+                font-weight: bold;
+                color: White;
+                width: 15%
+                height: 15%
+            }
+            ul.nested_list{list-style-type: square;
+                color: white;
+            }
+            #intro{
+                #text-align: center;
+            }
+            #acknowledgement{
+                display: none;
+            }
+            #mechanics{
+                display: none;
+            }
+            #help{
+                display: none;
+            }
+            #ntu-copyright{
+                z-index: 1001;
+                text-align: center;
+                position: fixed;
+                left: 20px;
+                bottom: -10px;
+            }
+            .showimage{
+                width: 250px;
+                height: 150px;
+                border: dotted blue 1px;
+            }
+            .next{
+                float: right;
+            }
+            .prev{
+                float: left;
+            }
+            .next_btn {
+                display: inline-block;
+                border-radius: 4px;
+                background-color: #4D4D4D;
+                border: none;
+                color: #FFFFFF;
+                text-align: center;
+                font-size: 22px;
+                padding: 2px;
+                width: 130px;
+                transition: all 0.5s;
+                cursor: pointer;
+                margin: 5px;
+            }
+            .next_btn span {
+                cursor: pointer;
+                display: inline-block;
+                position: relative;
+                transition: 0.5s;
+            }
+            
+            .next_btn span:after {
+                content: '»';
+                position: absolute;
+                opacity: 0;
+                top: 0;
+                right: -20px;
+                transition: 0.5s;
+            }
+            
+            .next_btn:hover span {
+                padding-right: 25px;
+            }
+            
+            .next_btn:hover span:after {
+                opacity: 1;
+                right: 0;
+            }
+            .previous_btn {
+                display: inline-block;
+                border-radius: 4px;
+                background-color: #4D4D4D;
+                border: none;
+                color: #FFFFFF;
+                text-align: center;
+                font-size: 22px;
+                padding: 2px;
+                width: 130px;
+                transition: all 0.5s;
+                cursor: pointer;
+                margin: 5px;
+            }
+            
+            .previous_btn span {
+                cursor: pointer;
+                display: inline-block;
+                position: relative;
+                transition: 0.5s;
+            }
+            
+            .previous_btn span:after {
+                content: "\ab";
+                position: absolute;
+                opacity: 0;
+                top: 0;
+                right: -20px;
+                transition: 0.5s;
+            }
+            
+            .previous_btn:hover span {
+                padding-left: 10px;
+            }
+            
+            .previous_btn:hover span:before {
+                content: "\ab";
+                opacity: 1;
+                left: 0;
+            }
+            #mechanics-single-letter{
+                text-align: center;
+                margin-left: 150px;
+            }
+            .title{
+                width: 100%;
+                color: white;
+                padding: 5px;
+                background: #222;
+            }
+            #enigma-instruction{
+                margin-left: 140px;
+            }
+            p.copyright{
+                z-index: 1002;
+                font-size: 0.8em;
+                color: white;
+            }
+            a{
+                text-decoration: none;
+                color: lightbllue;
+            }
+            a.reference{
+                font-size: 0.74em;
+                text-decoration: none;
+                color: black;
+                font-weight: bold;
+            }
+            a.second_reference_source {
+                font-size: 0.9em;
+                color: black;
+            }
+            p.reference_source {
+                font-size: 0.9em;
+            }
+            p.reference_source a {
+                font-size: 0.9em;
+            }
+            p.ack-reference{
+                font-size: 0.9em;
+            }
+            </style>
+    </head>
+    <body>
+        
+        <ul id="nav">
+            <div id ="logo_name">ENIGMA MACHINE</div>
+            <li><a id ='intro-link' class="active" href="javascript:void(0)" onclick = "enableIntro()">Introduction</a></li>
+            <li><a id ='ack-link' href="javascript:void(0)" onclick = "enableReference()">Acknowledgement</a></li>
+            <li><a id ='mechanics-link' href="javascript:void(0)" onclick = "enableMechanics()">Enigma Mechanics</a>
+            </li>
+            <li><a id ='help-link' href="javascript:void(0)" onclick = "enableHelp()">Using the emulator</a></li>
+            <li><a id ='emulator-link' href="javascript:void(0)" onclick = "enableEmulator()" ><font color="Yellow">Enigma emulator</font></a></li>
+        </ul>
+        
+        <div id = "ntu-copyright">
+            <p class ="copyright">Back to <a href="../index.html"><font color="Lime"><b>Crypto demos page</b></font></a><p>
+            <p class ="copyright">&copy;&nbsp;2016, <a href="http://ntu.edu.sg/home/anwitaman"><font color="white">Anwitaman DATTA</font></a><p>
+        </div>
+        <div id ="intro" style="margin-left:15%;padding:1px 16px;">
+            <h2>The emulator works with <font color="Orange">Firefox & Opera</font></h2>
+            <div>
+                <hr/>
+                <img class ="showimage" src ="images/intro/enigma_intro_image1.jpg"/>
+                <img class ="showimage" src ="images/intro/enigma_intro_image2.jpg"/>
+                <img class ="showimage" src ="images/intro/enigma_intro_image3.jpg"/>
+                <img class ="showimage" src ="images/intro/enigma_intro_image4.jpg"/>
+                <p><b>Image sources: </b><a id ='ref1' class ="reference" href="javascript:void(0);" onclick = "enableReference()">[1]</a>, <a class ="reference" href="javascript:void(0)" onclick = "enableReference()">[2]</a>, <a class ="reference" href="javascript:void(0)" onclick = "enableReference()">[3]</a>, <a class ="reference" href="javascript:void(0)" onclick = "enableReference()">[4]</a></p>
+                <hr/>
+            </div>
+            <br/>
+            <h3 class ='title'>Brief history of the Enigma machine</h3>
+            <p>The Enigma machines were a series of electromechanical rotor ciphers based on a German engineer, Arthur Scherbius's invention <a class ="reference" href="javascript:void(0)" onclick = "enableReference()">[5]</a>. Enigma machines were widely used by Nazi Germany during the World War 2. British scientist Alan Turing, leveraging on earlier breakthrough by three Polish military intelligence cryptanalysts Marian Rejewski, Jerzy Różycki and Henryk Zygalski, led the effort to break the cipher. Poor configuration and usage of the machine also facilitated the cryptanalysis. Breaking Enigma was a very important breakthrough that supported the Allied forces' war efforts, without which the outcome of the war and the world we live in today might have been quite different.             
+            </p>
+            <h3 class ='title'>About this emulator</h3>
+            <p>This enigma emulator has been developed by Leelar Thaophialuang as part of a set of <a href="../index.html"><font color="Orange">demonstrators of basic cryptography techniques</font></a> created in the School of Computer Science and Engineering at NTU Singapore under <a href="http://ntu.edu.sg/home/anwitaman"><font color="Orange">Anwitaman Datta</font></a>'s initiative, and captures the functionality and complexity of the Enigma machine. The emulator only simulates the three rotor Enigma M3 (Army; Navy). Reference materials for further reading can be found in the acknowledgement section. The last tab provides the actual emulator (works on Firefox & Opera).</p>
+            <div class ="next"><button class="next_btn" style="vertical-align:middle" onclick ="enableReference()"><span><a>Next</a></span></button></div>
+        </div>
+        <div id ="acknowledgement" style="margin-left:15%;padding:1px 16px;">
+            <h2>ACKNOWLEDGEMENT</h2>
+            <h3>Acknowledgement</h3>
+            <p class="ack-reference">1. This emulator was designed and implemented by <a href="https://www.linkedin.com/in/leelar-thaophialuang-834458b3">Leelar Thaophialuang</a> as part of his final year project in the School of Computer Science and Engineering at NTU Singapore.</p>
+            <p class="ack-reference">2. <a href ='https://bitbucket.org/bgneal/enigma/' target ="_blank">Brian Neal </a>for providing <a id ='py-enigma-linnk' href ="https://pypi.python.org/pypi/py-enigma/" target="_blank">py-enigma 0.1 Library</a>. This project used py-enigma 0.1 to simulate the enigma emulator.<p>
+                <h3>References</h3>
+                The accompanying information (and text/images) in this portal has been derived from the following sources:
+                <p class ="reference_source">
+                [1] By Bob Lord - <a rel="nofollow" class="external text" href="http://www.ilord.com/enigma.html" target="_blank">German Enigma Machine</a>, uploaded in english wikipedia on 16. Feb. 2005 by <a href="https://en.wikipedia.org/wiki/User:Matt_Crypto" class="extiw" title="en:User:Matt Crypto" target="_blank">en:User:Matt Crypto</a>, <a href="http://creativecommons.org/licenses/by-sa/3.0/" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>, <a class ="second_reference_source" href ="https://commons.wikimedia.org/w/index.php?curid=258976" target= "_blank">https://commons.wikimedia.org/w/index.php?curid=258976</a></p>
+                <p class ="reference_source">
+                [2] B.Lucattelli.(2006).<a  href ="http://lucattelli.com/talks/enig-en/" target ="_blank">
+                Writing the Enigma Machine in ABAP: An Educational Project</a>[online]. Available at: <a class ="second_reference_source" href ="http://lucattelli.com/talks/enig-en/" target ="_blank">http://lucattelli.com/talks/enig-en/</a>
+                </p>
+                <p class ="reference_source">
+                [3] By <a class ="reference_source" href="https://commons.wikimedia.org/wiki/User:Punishar" target="_blank" title="User:Punishar">Punishar</a> - <span class="int-own-work" lang="en">Own work</span>, <a href="http://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0">CC BY-SA 4.0</a>, <a class ="second_reference_source" href ="https://commons.wikimedia.org/w/index.php?curid=48423083" target ="_blank">https://commons.wikimedia.org/w/index.php?curid=48423083</a>
+                </p>
+                <p class ="reference_source">
+                [4] <a href="http://creativecommons.org/licenses/by-sa/3.0/" target="_blank" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>, <a class = "second_reference_source" href ="https://commons.wikimedia.org/w/index.php?curid=88679" target ="_blank">https://commons.wikimedia.org/w/index.php?curid=88679</a>
+                </p>
+                <p class ="reference_source">
+                [5] <a class = "second_reference_source" href ="https://en.wikipedia.org/wiki/Enigma_machine" target="_blank">https://en.wikipedia.org/wiki/Enigma_machine</a>
+                </p>
+                <p class ="reference_source">
+                [6] <a class = "second_reference_source" href ="https://en.wikipedia.org/wiki/Cryptanalysis_of_the_Enigma" target="_blank">https://en.wikipedia.org/wiki/Cryptanalysis_of_the_Enigma</a>
+                </p>
+                <p class ="reference_source">
+                [7] <a href="http://creativecommons.org/licenses/by-sa/3.0/" target ="_blank" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>, <a class ="second_reference_source" href ="https://commons.wikimedia.org/w/index.php?curid=23793" target ="_blank" >https://commons.wikimedia.org/w/index.php?curid=23793</a>
+                </p>
+                <p class ="reference_source">
+                [8] Crypto Museum.(2009). <a href = "http://www.cryptomuseum.com/crypto/enigma/" target = "_blank">Enigma Cipher Machine</a>[online]. Available at: <a class ="second_reference_source" href ="http://www.cryptomuseum.com/crypto/enigma/img/exploded.gif" target ="_blank">http://www.cryptomuseum.com/crypto/enigma/img/exploded.gif</a>
+                </p>
+                <p class ="reference_source">
+                [9] By <a href="https://en.wikipedia.org/wiki/User:Wapcaplet" target ="_blank" class="extiw" title="en:User:Wapcaplet">en:User:Wapcaplet</a> - uploaded in english wikipedia on 30. Jul. 2004 by author, <a href="http://creativecommons.org/licenses/by-sa/3.0/" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>, <a class ="second_reference_source" href ="https://commons.wikimedia.org/w/index.php?curid=258985" target ="_blank">https://commons.wikimedia.org/w/index.php?curid=258985</a>
+                </p>
+                <p class ="reference_source">
+                [10] By Created by
+                <a href="https://en.wikipedia.org/wiki/User:Wapcaplet" class="extiw" title="en:User:Wapcaplet" target ="_blank">Wapcaplet</a>
+                in <a href="https://commons.wikimedia.org/wiki/Blender_%28software%29" title="Blender (program)" class="mw-redirect" target ="_blank">Blender</a>.
+                - Uploaded by <a href="https://en.wikipedia.org/wiki/User:Wapcaplet" class="extiw" title="en:User:Wapcaplet" target ="_blank">Wapcaplet</a>
+                to the <a href="https://en.wikipedia.org/wiki/Main_Page" class="extiw" title="en:Main Page" target ="_blank">English Wikipedia</a>, <a href="http://creativecommons.org/licenses/by-sa/3.0/" title="Creative Commons Attribution-Share Alike 3.0<p></p>">CC BY-SA 3.0</a>,
+                <a class = "second_reference_source" href = "https://commons.wikimedia.org/w/index.php?curid=23791" target = "_blank">https://commons.wikimedia.org/w/index.php?curid=23791</a>
+                </p>
+                <p class ="reference_source">
+                [11] T.Long.(2009).<a  href ="http://www.terrylong.org/" target ="_blank">
+                Enigma Simulator by Terry Long</a>[online]. Available at: <a class = "second_reference_source" href = "http://www.terrylong.org/images/screenshots/2.png" target ="_blank">http://www.terrylong.org/images/screenshots/2.png(URL)</a>
+                </p>
+                <p class ="reference_source">
+                [12] T.Sale.<a  href ="http://www.codesandciphers.org.uk/enigma/rotorspec.htm" target ="_blank">
+                Technical Specification of the Enigma</a>[online]. Available at: <a class = "second_reference_source" href = "http://www.codesandciphers.org.uk/enigma/rotorspec.htm", target = "_blank">http://www.codesandciphers.org.uk/enigma/rotorspec.htm(URL)</a>
+                </p>
+                <p class ="reference_source">
+                [13] <a class = "second_reference_source" href = "https://en.wikipedia.org/wiki/Enigma_rotor_details" target = "_blank">https://en.wikipedia.org/wiki/Enigma_rotor_details</a>
+                </p>
+                <br/>
+                <div class ="prev"><button class="previous_btn" style="vertical-align:middle"  onclick = "enableIntro()"><span><a>&nbsp;Previous</a></span></button></div>
+                <div class ="next"><button class="next_btn" style="vertical-align:middle"  onclick = "enableMechanics()"><span><a>Next</a></span></button></div>
+                </div>
+                <div id ="mechanics" style="margin-left:15%;padding:1px 16px;">
+                <h2><a name ='keyboard'></a>
+                ENIGMA MECHANICS</h2>
+                <div id ="images">
+                <hr/>
+                <img class ="showimage" src ="images/mechanics/rotor_image1.png"/>
+                <img class ="showimage" src ="images/mechanics/rotor_image2.gif"/>
+                <img class ="showimage" src ="images/mechanics/rotor_image3.png"/>
+                <img class ="showimage" src ="images/mechanics/rotor_image4.png"/>
+                <p><b>Image sources: </b><a id ='ref1' class ="reference" href="javascript:void(0)" onclick = "enableReference()">[7]</a>, <a class ="reference" href="javascript:void(0)" onclick = "enableReference()">[8]</a>, <a class ="reference" href="javascript:void(0)" onclick = "enableReference()">[9]</a>, <a class ="reference" href="javascript:void(0)" onclick = "enableReference()">[10]</a></p>
+                <hr/>
+                </div>
+                <br/>
+                <h3 class ='title'>1. How the Enigma works</h3>
+                <p>When a plaintext letter is pressed on the keyboard, the pressed key triggers an electric current which goes through the rotated components of the Enigma Machine. Once the current reaches the destination, a bulb that is coresponding to the ciphertext lights up.
+                Encipherment with Enigma is special in that the same plaintext letter will not yield the same ciphertext letter next time (polyalphabetic substitution). This is due to the fact that every time a letter is typed, the right most rotor is rotated one step so that when the same letter is pressed again,
+                it would not be enciphered as the same ciphertext letter. To add complexity to the enigma's encipherment, a plugboard was introduced to allow pairs of letters to be swapped before it actually goes through the movable elements of the Enigma. To make things even more complicated, different settings can be applied to every element of the Enigma machine
+                so that different settings would uniquely generate different overall encryption.
+                </p>
+                </br>
+                <h3 class ='title'>2. The working sequence of a single letter</h3>
+                </br>
+                <img id ='mechanics-single-letter' src ="images/mechanics/asingleletter.png"/>
+                </br>
+                </br>
+                <ol id ='enigma-instruction'>
+                    <li>Suppose that the letter 'E' is pressed on the keyboard. Consequent to one keystroke, the right most rotor is being advanced by one step.</li>
+                    </br>
+                    <li>The letter 'E' is entering into the plugboard. The plugbaord swaps the letter 'E' to letter 'W' given that the plugboard setting pairs 'EW' (in the Figure above).</li>
+                    </br>
+                    <li>The letter 'W' is the letter produced by the plugboard and it is now passed to the static rotor. At the static rotor the letter is simply passed to another rotor.</li>
+                    </br>
+                    <li>Every keystroke causes the right rotor to move down one position. As a consequence, the letter 'W' is not mapped to letter 'W'. Instead, it is mapped to letter 'X' since 'X' has moved to the position where 'W' was. The letter 'X' would then be linked to letter 'S' based on the internal wiring mapping determined by the ring setting. Following the same process, after going through the middle rotor and left rotor, the letter is now transformed to letter into 'D' as it is passed to the reflector.
+                        <br/><b>Note:</b> For the middle rotor and the left rotor in this example, we find that the letter 'G' at the middle rotor is mapped to the letter 'G' at the left most rotor because at the initail stage, none of the middle rotor or left rotor are moving yet.</li>
+                    </br>
+                    <li>Different reflectors are wired up differently. In this example, the reflector B links the letter 'D' to letter 'H' and reflects the letter 'H' back to the three movable rotors.</li>
+                    </br>
+                    <li>The letter 'H' now goes back and passes through the rotors, it is substituted, and mapped to one another reapeatly along the way and emerges as the letter 'L'.</li>
+                    </br>
+                    <li>Again, The letter 'L' in the right rotor and the letter 'K' in the Static rotor have the same position. As a result, from the right rotor to the Static rotor, the letter 'L' is changed to the letter 'K' and it is directly passed back to Plugboard.</li>
+                    </br>
+                    <li>The letter 'K' enters the plugboard. The plugbaord swaps the letter 'K' to letter 'A' since the plugboard settings pair 'AK'.</li>
+                    </br>
+                    <li>The letter 'A' reaches the destination at Lampboard. The Lampboard lights up the letter 'A'.</li>
+                </ol>
+                </br>
+                <h3 class ='title'>3. The components of the Enigma Machine</h3>
+                <h3>3.1 Keyboard</h3>
+                <p>The keyboard is used to type the text to be encrypted or decrypted. The keyboard accepts the entered letter and relays the letter to the plugboard. It consists of 26 alphabets and it is an old QWERT layout, as shown in following figure. When any key on the keyboard is entered, an electric signal representing the key is sent to the plugboard.</p>
+                </br>
+                <img src ="images/mechanics/keyboard.png"/>
+                <br/>
+                <br/>
+                <hr/>
+                <br/>
+                <h3>3.2 Plugbaord</h3>
+                <p>Plugboard (Steckerbrett in German) allows incoming signal or outgoing signal to be swapped first before it goes through the rotors or goes out to the Lampboard. Introduction of the plugboard to the Enigma machine made it more robust. Normally, plugboard setting is manually created by plugging two wires together, and the number of pairs are limited to 10 pairs only. The plugboard has an additional constraint that no single letter can be mapped to two different letters. Any letter that has no pair is implicitly mapped to itself.</p>
+                </br>
+                <img src ="images/mechanics/plugboard.png"/>
+                <p><b>Image source: </b><a id ='ref1' class ="reference" href ="javascript:void(0)" onclick = "enableReference()">[11]</a></p>
+                <br/>
+                <hr/>
+                <br/>
+                <h3>3.3 Static Rotor</h3>
+                <p>A static rotor plays the role of a base reference. It has 26 letters with fixed positions. The static rotor seems to be doing nothing (in that it is static) but it has been chosen so that with every step of the right most rotor's rotation, the mapping of the letters between the right rotor and the stator varies significantly.</p>
+                </br>
+                <hr/>
+                <h3>3.4 Movable Rotors</h3>
+                <p>The rotors (alternatively wheels or drums, Walzen in German) are the main component of the Enigma machine. Every rotor has 26 contacts (letters) associated with 26 pins. The pins and contacts represent the 26 alphabets A-Z. A rotor individually can be seen to realize a monoalphabetic substitution cipher. For instance, in the Rotor 'I' (above Figure), the pin associated with the letter 'A' is wired to the letter 'E'. The complexity and security of the Enigma machine comes from the use of multiple rotors in a cascade, and their changing relative positions, which realize a polyalphabetic substitution. Each rotor has its own notch, used to indicate the step the rotor is in at a given time point.</p>
+                <h4>3.4.1 Technical specifications of the Enigma rotors:</h4>
+                <p>Following table shows the internal-wiring/mapping of different rotors at default setting or when ring settings are set to zero.</p>
+                <table border="1" style="width:100%; text-align: center;">
+                    <tr>
+                        <th>INPUT</th>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>C</th>
+                        <th>D</th>
+                        <th>E</th>
+                        <th>F</th>
+                        <th>G</th>
+                        <th>H</th>
+                        <th>I</th>
+                        <th>J</th>
+                        <th>K</th>
+                        <th>L</th>
+                        <th>M</th>
+                        <th>N</th>
+                        <th>O</th>
+                        <td>P</th>
+                            <th>Q</th>
+                            <th>R</th>
+                            <th>S</th>
+                            <th>T</th>
+                            <th>U</th>
+                            <th>V</th>
+                            <th>W</th>
+                            <th>X</th>
+                            <th>Y</th>
+                            <th>Z</th>
+                            </tr>
+                    <tr>
+                        <th>ROTOR I</th>
+                        <td>E</td>
+                        <td>K</td>
+                        <td>M</td>
+                        <td>F</td>
+                        <td>L</td>
+                        <td>G</td>
+                        <td>D</td>
+                        <td>Q</td>
+                        <td>V</td>
+                        <td>Z</td>
+                        <td>N</td>
+                        <td>T</td>
+                        <td>O</td>
+                        <td>W</td>
+                        <td>Y</td>
+                        <td>H</td>
+                        <td>X</td>
+                        <td>U</td>
+                        <td>S</td>
+                        <td>P</td>
+                        <td>A</td>
+                        <td>I</td>
+                        <td>B</td>
+                        <td>R</td>
+                        <td>C</td>
+                        <td>J</td>
+                    </tr>
+                    <tr>
+                        <th>ROTOR II</th>
+                        <td>A</td>
+                        <td>J</td>
+                        <td>D</td>
+                        <td>K</td>
+                        <td>S</td>
+                        <td>I</td>
+                        <td>R</td>
+                        <td>U</td>
+                        <td>X</td>
+                        <td>B</td>
+                        <td>L</td>
+                        <td>H</td>
+                        <td>W</td>
+                        <td>T</td>
+                        <td>M</td>
+                        <td>C</td>
+                        <td>Q</td>
+                        <td>G</td>
+                        <td>Z</td>
+                        <td>N</td>
+                        <td>P</td>
+                        <td>Y</td>
+                        <td>F</td>
+                        <td>V</td>
+                        <td>O</td>
+                        <td>E</td>
+                    </tr>
+                    <tr>
+                        <th>ROTOR III</th>
+                        <td>B</td>
+                        <td>D</td>
+                        <td>F</td>
+                        <td>H</td>
+                        <td>J</td>
+                        <td>L</td>
+                        <td>C</td>
+                        <td>P</td>
+                        <td>R</td>
+                        <td>T</td>
+                        <td>X</td>
+                        <td>V</td>
+                        <td>Z</td>
+                        <td>N</td>
+                        <td>Y</td>
+                        <td>E</td>
+                        <td>I</td>
+                        <td>W</td>
+                        <td>G</td>
+                        <td>A</td>
+                        <td>K</td>
+                        <td>M</td>
+                        <td>U</td>
+                        <td>S</td>
+                        <td>Q</td>
+                        <td>O</td>
+                    </tr>
+                    <tr>
+                        <th>ROTOR IV</th>
+                        <td>E</td>
+                        <td>S</td>
+                        <td>O</td>
+                        <td>V</td>
+                        <td>P</td>
+                        <td>Z</td>
+                        <td>J</td>
+                        <td>A</td>
+                        <td>Y</td>
+                        <td>Q</td>
+                        <td>U</td>
+                        <td>I</td>
+                        <td>R</td>
+                        <td>H</td>
+                        <td>X</td>
+                        <td>L</td>
+                        <td>N</td>
+                        <td>F</td>
+                        <td>T</td>
+                        <td>G</td>
+                        <td>K</td>
+                        <td>D</td>
+                        <td>C</td>
+                        <td>M</td>
+                        <td>W</td>
+                        <td>B</td>
+                    </tr>
+                    <tr>
+                        <th>ROTOR V</th>
+                        <td>V</td>
+                        <td>Z</td>
+                        <td>B</td>
+                        <td>R</td>
+                        <td>G</td>
+                        <td>I</td>
+                        <td>T</td>
+                        <td>Y</td>
+                        <td>U</td>
+                        <td>P</td>
+                        <td>S</td>
+                        <td>D</td>
+                        <td>N</td>
+                        <td>H</td>
+                        <td>L</td>
+                        <td>X</td>
+                        <td>A</td>
+                        <td>W</td>
+                        <td>M</td>
+                        <td>J</td>
+                        <td>Q</td>
+                        <td>O</td>
+                        <td>F</td>
+                        <td>E</td>
+                        <td>C</td>
+                        <td>K</td>
+                    </tr>
+                    <tr>
+                        <th>ROTOR VI</th>
+                        <td>J</td>
+                        <td>P</td>
+                        <td>G</td>
+                        <td>V</td>
+                        <td>O</td>
+                        <td>U</td>
+                        <td>M</td>
+                        <td>F</td>
+                        <td>Y</td>
+                        <td>Q</td>
+                        <td>B</td>
+                        <td>E</td>
+                        <td>N</td>
+                        <td>H</td>
+                        <td>Z</td>
+                        <td>R</td>
+                        <td>D</td>
+                        <td>K</td>
+                        <td>A</td>
+                        <td>S</td>
+                        <td>X</td>
+                        <td>L</td>
+                        <td>I</td>
+                        <td>C</td>
+                        <td>T</td>
+                        <td>W</td>
+                    </tr>
+                    <tr>
+                        <th>ROTOR VII</th>
+                        <td>N</td>
+                        <td>Z</td>
+                        <td>J</td>
+                        <td>H</td>
+                        <td>G</td>
+                        <td>R</td>
+                        <td>C</td>
+                        <td>X</td>
+                        <td>M</td>
+                        <td>Y</td>
+                        <td>S</td>
+                        <td>W</td>
+                        <td>B</td>
+                        <td>O</td>
+                        <td>U</td>
+                        <td>F</td>
+                        <td>A</td>
+                        <td>I</td>
+                        <td>V</td>
+                        <td>L</td>
+                        <td>P</td>
+                        <td>E</td>
+                        <td>K</td>
+                        <td>Q</td>
+                        <td>D</td>
+                        <td>T</td>
+                    </tr>
+                    <tr>
+                        <th>ROTOR VIII</th>
+                        <td>F</td>
+                        <td>K</td>
+                        <td>Q</td>
+                        <td>H</td>
+                        <td>T</td>
+                        <td>L</td>
+                        <td>X</td>
+                        <td>O</td>
+                        <td>C</td>
+                        <td>B</td>
+                        <td>J</td>
+                        <td>S</td>
+                        <td>P</td>
+                        <td>D</td>
+                        <td>Z</td>
+                        <td>R</td>
+                        <td>A</td>
+                        <td>M</td>
+                        <td>E</td>
+                        <td>W</td>
+                        <td>N</td>
+                        <td>I</td>
+                        <td>U</td>
+                        <td>Y</td>
+                        <td>G</td>
+                        <td>V</td>
+                    </tr>
+                </table>
+                <p><b>Source: </b><a id ='ref1' class ="reference" href="javascript:void(0)" onclick = "enableReference()">[12]</a></p>
+                <h4>3.4.2 Turnover notch positions</h4>
+                <p>Each rotor has one or two notches. Notch refers to the stepping mechanism. For single stepping, a rotor has only one notch and when the rotor has fully finished one round, it will trigger another rotor to move forward one step. This happens when a pal on the rotor meets the notch. For double stepping, rotor has two notches for triggering another rotor's step. It is not necessary that a rotor to fully finish one round for a next rotor to rotate, since, having two notches, the rotor can meet a notch earlier.</p>
+                <p><b>Note:</b>Following table corresponds the Enigma machine M3 (Army; navy) only.</p>
+                <table border="1" style="width:100%; text-align: center;">
+                    <tr>
+                        <td>Rotor Name</td>
+                        <td>Notch</td>
+                    </tr>
+                    <tr>
+                        <td>Rotor I</td>
+                        <td>Q</td>
+                    </tr>	
+                    <tr>
+                        <td>Rotor II</td>
+                        <td>E</td>
+                    </tr>
+                    <tr>
+                        <td>Rotor III</td>
+                        <td>V</td>
+                    </tr>
+                    <tr>
+                        <td>Rotor IV</td>
+                        <td>J</td>
+                    </tr>
+                    <tr>
+                        <td>Rotor V</td>
+                        <td>Z</td>
+                    </tr>
+                    <tr>
+                        <td>Rotor VI,VII,VIII</td>
+                        <td>Z and M</td>
+                    </tr>
+                </table>
+                <p><b>Source: </b><a id ='ref1' class ="reference" href="javascript:void(0)" onclick = "enableReference()">[13]</a></p>
+                <hr/>
+                <br/>
+                <h3>3.5 Reflector</h3>
+                <p>Reflector (German: Umkehrwalze) is single-sided. The reflector takes the last input from the left rotor and performs a very simple substitution where its contacts are swapped in pairs. Two possible reflectors are available for the Enigma machine, each of them is wired up with different combination of wirings so that every single letter is reflected differently.</p>
+                <h4>3.5.1 Technical specifications of the Enigma reflectors</h4>
+                <table border="1" style="width:100%; text-align: center;">
+                    <tr>
+                        <td>Reflector Model</td>
+                        <td>Pair of wirings</td> 
+                    </tr>
+                    <tr>
+                        <td>B</td>
+                        <td>(BR) (CU) (DH) (EQ) (FS) (GL) (IP) (JX) (KN) (MO) (TZ) (VW)</td> 
+                    </tr>
+                    <tr>
+                        <td>C</td>
+                        <td>(AF) (BV) (CP) (DJ) (EI) (GO) (HY) (KR) (LZ) (MX) (NW) (TQ) (SU)</td> 
+                    </tr>
+                </table>
+                <p><b>Source: </b><a id ='ref1' class ="reference" href="javascript:void(0)" onclick = "enableReference()">[12]</a></p>
+                <hr/>
+                <br/>
+                <h3>3.6 Lampboard</h3>
+                <p>The lampboard follows the same layout as the keyboard. Each letter has its coresponding bulb, which lights up to represent the enciphered or deciphered letter obtained from the encryption and decryption respectively.</p>
+                <img src ="images/mechanics/lampboard.png"/>
+                <br/>
+                <br/>
+                <hr/>
+                <br/>
+                <h3 class ='title'>4. Encryption & Decryption</h3>
+                <p>Enigma is a symmetric encryption system, so it is assumed that some secrets have already been agreed and exchanged a priori. These secrets are key, ring's order, ring setting, reflector setting, plugboard, and initial display windows.</p>
+                
+               
+                <div class ="prev"><button class="previous_btn" style="vertical-align:middle"  onclick = "enableReference()"><span><a>&nbsp;Previous</a></span></button></div>
+                <div class ="next"><button class="next_btn" style="vertical-align:middle"  onclick = "enableHelp()"><span><a>Next</a></span></button></div>
+        </div>
+        <div id ="help" style="margin-left:15%;padding:1px 16px;">
+            <h2>EMULATOR HELP</h2>
+            <h3 class ='title'>1. Plugboard Setting</h3>
+            <p>Plugboard setting is indicated with a red rectangle in the figure below. To set the plugboard, first choose a pair of alphabets. Then click the first alphabet on the right side of the plugboard followed by clicking the second alphabet on the left side of the plugboard. When a character is clicked, the clicked pin will change its background to yellow signaling that the clicked pin is selected. This forms a pair of plugboard setting.</p>
+            <img src = "images/help/help_plugboard_1.png"/>
+            <p>Following figure shows the above instructions. Since plugboard setting has a constraint that no single alphabet can be mapped to two different alphbets, in this example we are trying to swap 'K' with 'S'. We find that there are two wires, one is mapping the letter 'K' to the letter 'S' while another one is mapping the letter 'S' to 'K'. The number of pairs are limited to 10 pairs only.</p>
+            <img src = "images/help/help_plugboard_2.png"/>
+            <br/>
+            <br/>
+            <h3 class ='title'>2. Ring Order Setting (Walzenlage)</h3>
+            <p>The red rectangle shows the Walzenlage or Ring's order. There are three rotors from left to right: left rotor (outer), middle rotor, and right (inner) rotor. From left to right we can arrange the order of the rotor in any order by clicking the right-arrow button or left-arrow button. This emulator supports 8 differents rotors, namely 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', and 'VIII'. To set the ring's order, three rotors are chosen from these 8 rotors based on ones preference. Duplicating the rotor type is discouraged, example: "II II II", "II I II","II II I", and other duplicated orders.</p>
+            <img src = "images/help/help_ring_order_setting.png"/>
+            <br/>
+            <br/>
+            <h3 class ='title'>3. Reflector Setting (Umkehrwalze)</h3>
+            <p>Reflector Setting is highlighted by the red rectangle. In emulator implements two types of reflectors - reflector 'B' and reflector 'C'. To change the setting, click on the right-arrow button or left-arrow button. Different reflectors are wired differently.  </p>
+            <img src = "images/help/help_reflector.png"/>
+            <br/>
+            <br/>
+            <h3 class ='title'>4. Entry Wheel (Eintrittzwalze)</h3>
+            <p>The wiring of the Eintrittzwalze (ETW, entry wheel) between the Plugboard and the Rotors cannot be manipulated.  <br><br>
+                 
+            <h3 class ='title'>5. Ring Setting (Ringstellung)</h3>
+            <p>Ring Setting is the area of red rectangle. Changing the ring setting makes changes to the internal-wiring mapping. Each rotor has 26 possible ways of setting and setting ranges from 0-25. Changing the setting can be done by clicking left-arrow button or right-arrow button. <!--Other online references, such 26 ways are somtimes represented by alphabets 'A'-'Z'.--></p>
+            <img src = "images/help/help_ring_setting.png"/>
+            <br/>
+            <br/>
+            <h3 class ='title'>6. Display windows (Grundstellung)</h3>
+            <p>The display windows are shown in the red rectangle. Display windows are current positions of the three rotor which can be seen by the officer or user. Scrolling up and down the rotor will change the windows value (current positions). Display windows has to be firstly set before encryption/decryption. Display windows are secret from intruders and attackers. Every time a letter is typed, diplay winodow of the right most rotor is increased by one offset, followed by a conditional stepping if any of the midlle rotor or left most rotor meeting corresponding notches.</p>
+            <img src = "images/help/help_display_windows.png"/>
+            <br/>
+            <br/>
+            <h3 class ='title'>7. Inputs and Outputs</h3>
+            <p>Inputs and Outputs is the area indicated with a red rectangle, located at the bottom of the Enigma emulator. This is an artefact of the emulator itself, where the input and corresponding output is printed to explicitly keep track of what has been typed as well as what has been the resulting enciphered text.</p>
+            <img src = "images/help/help_input_output.png"/>
+            <br/>
+            <br/>
+            <h3 class ='title'>8. Reset Enigma</h3>
+            <p>Reset Button is highlighted by the red rectangle. User can reset the enigma emulator to its default settings by clicking this button.</p>
+            <img src = "images/help/help_reset.png"/>
+            <br/>
+            <br/>
+            <div class ="prev"><button class="previous_btn" style="vertical-align:middle"  onclick ="enableMechanics()"><span><a>&nbsp;Previous</a></span></button></div>
+            <div class ="next"><button class="next_btn" style="vertical-align:middle"  onclick = "enableEmulator()"><span><a>Next</a></span></button></div>
+        </div>
+
+<script>
+(function() {
+var options = {"gui": {"show": true }, "console": {"show": false}, "code": {"show": false}};
+
+embedSkulptor(options,(function () {/*
+# CodeSkulptor runs in Chrome 18+, Firefox 11+, and Safari 6+.
+# Some features may work in other browsers, but do not expect
+# full functionality.  It does NOT run in Internet Explorer.
+import simplegui
+import collections
+import math
+#print("***************  MAIN START  *******************")
+TIMER = 0
+TIMER_COLOR_N = 0
+ALPHA_LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+WIRING_FREQ_SET = set((letter, 1) for letter in ALPHA_LABELS)
+message = ""
+TGLB_WIDTH = 110 #toggle label width
+TGLB_HEIGHT = 26 #toggle label height
+FOOTER_H = 10
+CHIAN_H = 420 #chain height
+ROTOR_BOARD_GAP = 25 #rotor board gap
+BOARD_W = 280
+BOARD_H = 200
+RESET_BTN_W = 106
+RESET_BTN_H = 18
+X_GAP = 5
+Y_GAP = 5
+REFLECTOR_B = '#5D5E5E'
+ROTOR1_B = '#9C9C9C'
+ROTOR2_B = '#9C9C9C'
+ROTOR3_B = '#9C9C9C'
+ETW_B = '#5D5E5E'
+PLUG_B = '#5D5E5E'
+PIN_BTN_SIZE = 16
+PIN_BTN_COLOR = '#DEEBF7'
+POSITION = [0,0]
+POSITIONKEY = [0,0]
+RING_SETTING_POSITION = [0,0]
+RESET_POSITION = [0,0]
+TEST = [568, 450]
+SETTING_CONSOLE = '#2f5653'
+KRADIUS = 12
+COUNTER = 0
+SWITCH_CLCK = 0
+#PLUG_SETTING = "AV BS CG DL FU HZ IN KM OW RX"
+PLUG_SETTING = ' '
+
+#ring setting 0 --> 25
+RING_LIST = ['I','II','III','IV','V','VI','VII','VIII']
+RING_INDEX = [2,1,0]
+RINGS= [RING_LIST[RING_INDEX[0]], RING_LIST[RING_INDEX[1]], RING_LIST[RING_INDEX[2]]]
+
+REF_LIST = ['B','C']
+REF_INDEX = 0
+REFLECTOR_SETTING = REF_LIST[REF_INDEX]
+RING_SETTING_BORDER = '#1A1A67'
+RING_SETTING_COLOR = ['#DEEBF7','#9bbabf']
+RING_SETTING = [0,0,0]
+DISPLAY = ['A','A','A']
+UPDATE = False
+LB_BASE_LINK = list(range(5))
+KB_BASE_LINK = list(range(5))
+CIPHERS = ''
+DECIPHERS = ''
+CLICKED_CHR =''
+OUTPUT_CHR = ''
+PLUG_RIGHT_CHR = ''
+PLUG_LEFT_CHR = ''
+SELECTED_R = False
+SELECTED_L = False
+LAMPPOSITION = [0,0]
+PRESSED_COUNTER = 0
+START_INDEX = 0
+END_INDEX = 0
+TIMER_STEP = 3
+SETTING_TIMER = 20
+DICT_PAIRED = {}
+
+
+OX = 5
+OY = 5
+PlugX = OX+5*TGLB_WIDTH + 5*X_GAP 
+PlugY = (OY + 3*TGLB_HEIGHT+4*Y_GAP) 
+PLUGBOARD_AREA = [[PlugX, PlugY], [PlugX + TGLB_WIDTH, PlugY],
+                 [PlugX+TGLB_WIDTH, PlugY + CHIAN_H], [PlugX, PlugY + CHIAN_H]]
+                 
+RT1_RING_SET = list(range(2))
+RT2_RING_SET = list(range(2))
+RT3_RING_SET = list(range(2))
+
+SETTING_BTN_W = 30
+SETTING_BTN_H = 18
+SETTING_BTN_COLOR = '#cccc66'
+#rotor1, left
+x = (OX + TGLB_WIDTH + X_GAP) + 2
+y = (OY + TGLB_HEIGHT + Y_GAP) + Y_GAP - 1
+RT1_RING_SET[0] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+#rotor1, right
+x = (OX + 2*TGLB_WIDTH + X_GAP) - 2  - SETTING_BTN_W
+y = (OY + TGLB_HEIGHT + Y_GAP) + Y_GAP - 1
+RT1_RING_SET[1] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]		
+
+#rotor2, left
+x = (OX + 2*TGLB_WIDTH + 2*X_GAP) + 2
+y = (OY + TGLB_HEIGHT + Y_GAP) + Y_GAP - 1
+RT2_RING_SET[0] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+#rotor2, right
+x = (OX + 3*TGLB_WIDTH + 2*X_GAP) - 2  - SETTING_BTN_W
+y = (OY + TGLB_HEIGHT + Y_GAP) + Y_GAP - 1
+RT2_RING_SET[1] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+
+#rotor3, left
+x = (OX + 3*TGLB_WIDTH + 3*X_GAP) + 2
+y = (OY + TGLB_HEIGHT + Y_GAP) + Y_GAP - 1
+RT3_RING_SET[0] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+#rotor3, right
+x = (OX + 4*TGLB_WIDTH + 3*X_GAP) - 2  - SETTING_BTN_W
+y = (OY + TGLB_HEIGHT + Y_GAP) + Y_GAP - 1
+RT3_RING_SET[1] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+                  
+RING_SETTING_AREA = [RT1_RING_SET,RT2_RING_SET,RT3_RING_SET]
+#reflector setting area
+#Reflector, left
+REF_SET_AREA = list(range(2))
+x = OX
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + Y_GAP - 1	
+REF_SET_AREA[0] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+#Reflector, right
+x = (OX + TGLB_WIDTH) - 2 - SETTING_BTN_W
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + Y_GAP - 1	
+REF_SET_AREA[1] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+
+#ring order setting area
+RT1_RING_OD = list(range(2))
+RT2_RING_OD = list(range(2))
+RT3_RING_OD = list(range(2))
+#rotor1, left
+
+x = (OX + TGLB_WIDTH + X_GAP) + 2	
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + Y_GAP - 1
+#y = (OY + 2*TGLB_HEIGHT + 2*Y_GAP) + Y_GAP - 1
+RT1_RING_OD[0] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+
+#rotor1, right
+x = (OX + 2*TGLB_WIDTH + X_GAP) - 2 - SETTING_BTN_W
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + Y_GAP - 1
+RT1_RING_OD[1] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+
+#rotor2, left
+x = (OX + 2*TGLB_WIDTH + 2*X_GAP) + 2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + Y_GAP - 1
+RT2_RING_OD[0] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+
+#rotor2, right
+x = (OX + 3*TGLB_WIDTH + 2*X_GAP) - 2 - SETTING_BTN_W
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + Y_GAP - 1
+RT2_RING_OD[1] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+
+#rotor 3, left
+x = (OX + 3*TGLB_WIDTH + 3*X_GAP) + 2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + Y_GAP - 1
+RT3_RING_OD[0] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+
+#rotor3, right
+x = (OX + 4*TGLB_WIDTH + 3*X_GAP) - 2 - SETTING_BTN_W
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + Y_GAP - 1
+RT3_RING_OD[1] = [[x,y],
+                  [x + SETTING_BTN_W, y],
+                  [x + SETTING_BTN_W, y + SETTING_BTN_H ],
+                  [x, y + SETTING_BTN_H]]
+
+RING_ORDER_AREA = [RT1_RING_OD,RT2_RING_OD,RT3_RING_OD]
+
+#reset button
+x = (OX + 5*TGLB_WIDTH + 5*X_GAP) +2
+y = OY+ Y_GAP - 1  
+RESET_BTN_AREA= [[x,y],
+                  [x + RESET_BTN_W, y],
+                  [x + RESET_BTN_W, y + RESET_BTN_H ],
+                  [x, y + RESET_BTN_H]]            
+#print("AFTER GLOBAL DECLARATION")
+#Helper Function to run the enigma machine manipulation 
+#Helper function to instantiate the enigma
+def instantiateEnigma():
+    global POSITION, LAMPPOSITION, POSITIONKEY
+    global RING_SETTING, PRESSED_COUNTER,PLUG_SETTING
+    global UPDATE
+    global Pub,PubUI,rotor,reflector,enigma,rotorUI,reflectorUI
+    global RING_INDEX, RING_LIST, RINGS
+    
+    print(RING_INDEX)
+    print(RING_LIST)
+    print(RINGS)
+    global REF_LIST,REF_INDEX,REFLECTOR_SETTING
+    global CIPHERS,DECIPHERS
+    #RING_INDEX = [2,1,0]
+    #RINGS= [RING_LIST[RING_INDEX[0]], RING_LIST[RING_INDEX[1]], RING_LIST[RING_INDEX[2]]]
+    POSITION = [0,0]
+    LAMPPOSITION = [0,0]
+    POSITIONKEY = [0,0]
+    PRESSED_COUNTER = 0
+    CIPHERS = ''
+    DECIPHERS = ''
+    if PLUG_SETTING != '':
+        #plugSettingObject.set_text(PLUG_SETTING)
+        Pub = Plugboard(PLUG_SETTING)
+        PubUI = PlugboardUI(Pub)
+        #rotor = list(range(3))
+        rotor[0] = Rotor('my rotor1', ROTORS[RINGS[0]]['wiring'], ring_setting=RING_SETTING[0], stepping= ROTORS[RINGS[0]]['stepping'])
+        rotor[1] = Rotor('my rotor2', ROTORS[RINGS[1]]['wiring'], ring_setting=RING_SETTING[1], stepping= ROTORS[RINGS[1]]['stepping'])
+        rotor[2] = Rotor('my rotor3', ROTORS[RINGS[2]]['wiring'], ring_setting=RING_SETTING[2], stepping= ROTORS[RINGS[2]]['stepping'])
+        reflector = Rotor('my reflector', REFLECTORS[REFLECTOR_SETTING])
+
+        #rotorUI  = list(range(3))
+        rotorUI[0] = RotorUI(rotor[0], RT1_RIGHT, RT1_LEFT,RT1_ARROWS)
+        rotorUI[1] = RotorUI(rotor[1], RT2_RIGHT, RT2_LEFT,RT2_ARROWS)
+        rotorUI[2]= RotorUI(rotor[2], RT3_RIGHT, RT3_LEFT,RT3_ARROWS)
+
+        reflectorUI = ReflectorUI(reflector, REFT_RIGHT,REFT_LEFT)
+
+        enigma = EnigmaMachine([rotor[0], rotor[1], rotor[2]], reflector, Pub)
+
+        enigma = EnigmaMachine([rotor[0], rotor[1], rotor[2]], reflector, Pub)
+        #displayObject.set_text(enigma.get_display()[0]+" "+enigma.get_display()[1]+" "+enigma.get_display()[2])
+        #inputObject.set_text('')
+        #outObject.set_text('')
+    else:
+        #plugSettingObject.set_text(PLUG_SETTING)
+        Pub = Plugboard(" ")
+        PubUI = PlugboardUI(Pub)
+        #rotor = list(range(3))
+        rotor[0] = Rotor('my rotor1', ROTORS[RINGS[0]]['wiring'], ring_setting=RING_SETTING[0], stepping= ROTORS[RINGS[0]]['stepping'])
+        rotor[1] = Rotor('my rotor2', ROTORS[RINGS[1]]['wiring'], ring_setting=RING_SETTING[1], stepping= ROTORS[RINGS[1]]['stepping'])
+        rotor[2] = Rotor('my rotor3', ROTORS[RINGS[2]]['wiring'], ring_setting=RING_SETTING[2], stepping= ROTORS[RINGS[2]]['stepping'])
+        reflector = Rotor('my reflector', REFLECTORS[REFLECTOR_SETTING])
+
+        #rotorUI  = list(range(3))
+        rotorUI[0] = RotorUI(rotor[0], RT1_RIGHT, RT1_LEFT,RT1_ARROWS)
+        rotorUI[1] = RotorUI(rotor[1], RT2_RIGHT, RT2_LEFT,RT2_ARROWS)
+        rotorUI[2]= RotorUI(rotor[2], RT3_RIGHT, RT3_LEFT,RT3_ARROWS)
+
+        reflectorUI = ReflectorUI(reflector, REFT_RIGHT,REFT_LEFT)
+
+        enigma = EnigmaMachine([rotor[0], rotor[1], rotor[2]], reflector, Pub)
+
+        enigma = EnigmaMachine([rotor[0], rotor[1], rotor[2]], reflector,Pub)
+        #displayObject.set_text(enigma.get_display()[0]+" "+enigma.get_display()[1]+" "+enigma.get_display()[2])
+        #inputObject.set_text('')
+        #outObject.set_text('')        
+        #print('Case 2')
+
+#reset enignma
+def reset_enigma():
+    global POSITION, LAMPPOSITION, POSITIONKEY,RING_SETTING_POSITION,RESET_POSITION
+    global TIMER, TIMER_COLOR_N, COUNTER, PRESSED_COUNTER
+    global RING_SETTING, PLUG_SETTING, DISPLAY
+    global enigma,Pub,PubUI,reflector,rotor,rotorUI,reflectorUI
+    global RINGS, RING_LIST, REFLECTOR_SETTING, REF_LIST
+    global START_INDEX, END_INDEX, RING_INDEX, REF_INDEX, TIMER_STEP,SETTING_TIMER
+    global CLICKED_CHR, OUTPUT_CHR, PLUG_RIGHT_CHR, PLUG_LEFT_CHR, SELECTED_R, SELECTED_L
+    global DICT_PAIRED
+    global CIPHERS,DECIPHERS
+    TIMER = 0
+    TIMER_COLOR_N = 0
+    POSITION = [0,0]
+    POSITIONKEY = [0,0]
+    RING_SETTING_POSITION = [0,0]
+    #RESET_POSITION = [0,0]
+    LAMPPOSITION = [0,0]
+    COUNTER = 0
+    PLUG_SETTING = ' '
+    CIPHERS = ''
+    DECIPHERS = ''
+    #ring setting 0 --> 25
+    RING_INDEX = [2,1,0]
+    RINGS= [RING_LIST[RING_INDEX[0]], RING_LIST[RING_INDEX[1]], RING_LIST[RING_INDEX[2]]]
+    
+    REF_INDEX = 0
+    REFLECTOR_SETTING = REF_LIST[REF_INDEX]
+    RING_SETTING = [0,0,0]
+    DISPLAY = ['A','A','A']
+    CLICKED_CHR =''
+    OUTPUT_CHR = ''
+    PLUG_RIGHT_CHR = ''
+    PLUG_LEFT_CHR = ''
+    SELECTED_R = False
+    SELECTED_L = False
+    PRESSED_COUNTER = 0
+    START_INDEX = 0
+    END_INDEX = 0
+    TIMER_STEP = 3
+    SETTING_TIMER = 20
+    DICT_PAIRED = {}
+    
+    if PLUG_SETTING != '':
+        #plugSettingObject.set_text(PLUG_SETTING)
+        Pub = Plugboard(PLUG_SETTING)
+        PubUI = PlugboardUI(Pub)
+        #rotor = list(range(3))
+        rotor[0] = Rotor('my rotor1', ROTORS[RINGS[0]]['wiring'], ring_setting=RING_SETTING[0], stepping= ROTORS[RINGS[0]]['stepping'])
+        rotor[1] = Rotor('my rotor2', ROTORS[RINGS[1]]['wiring'], ring_setting=RING_SETTING[1], stepping= ROTORS[RINGS[1]]['stepping'])
+        rotor[2] = Rotor('my rotor3', ROTORS[RINGS[2]]['wiring'], ring_setting=RING_SETTING[2], stepping= ROTORS[RINGS[2]]['stepping'])
+        reflector = Rotor('my reflector', REFLECTORS[REFLECTOR_SETTING])
+
+        #rotorUI  = list(range(3))
+        rotorUI[0] = RotorUI(rotor[0], RT1_RIGHT, RT1_LEFT,RT1_ARROWS)
+        rotorUI[1] = RotorUI(rotor[1], RT2_RIGHT, RT2_LEFT,RT2_ARROWS)
+        rotorUI[2]= RotorUI(rotor[2], RT3_RIGHT, RT3_LEFT,RT3_ARROWS)
+
+        reflectorUI = ReflectorUI(reflector, REFT_RIGHT,REFT_LEFT)
+
+        enigma = EnigmaMachine([rotor[0], rotor[1], rotor[2]], reflector, Pub)
+
+        enigma = EnigmaMachine([rotor[0], rotor[1], rotor[2]], reflector, Pub)
+        #displayObject.set_text(enigma.get_display()[0]+" "+enigma.get_display()[1]+" "+enigma.get_display()[2])
+        #inputObject.set_text('')
+        #outObject.set_text('')
+    else:
+        #plugSettingObject.set_text(PLUG_SETTING)
+        print("Plug is emty")
+        Pub = Plugboard(" ")
+        PubUI = PlugboardUI(Pub)
+        #rotor = list(range(3))
+        rotor[0] = Rotor('my rotor1', ROTORS[RINGS[0]]['wiring'], ring_setting=RING_SETTING[0], stepping= ROTORS[RINGS[0]]['stepping'])
+        rotor[1] = Rotor('my rotor2', ROTORS[RINGS[1]]['wiring'], ring_setting=RING_SETTING[1], stepping= ROTORS[RINGS[1]]['stepping'])
+        rotor[2] = Rotor('my rotor3', ROTORS[RINGS[2]]['wiring'], ring_setting=RING_SETTING[2], stepping= ROTORS[RINGS[2]]['stepping'])
+        reflector = Rotor('my reflector', REFLECTORS[REFLECTOR_SETTING])
+
+        #rotorUI  = list(range(3))
+        rotorUI[0] = RotorUI(rotor[0], RT1_RIGHT, RT1_LEFT,RT1_ARROWS)
+        rotorUI[1] = RotorUI(rotor[1], RT2_RIGHT, RT2_LEFT,RT2_ARROWS)
+        rotorUI[2]= RotorUI(rotor[2], RT3_RIGHT, RT3_LEFT,RT3_ARROWS)
+
+        reflectorUI = ReflectorUI(reflector, REFT_RIGHT,REFT_LEFT)
+
+        enigma = EnigmaMachine([rotor[0], rotor[1], rotor[2]], reflector, Pub)
+
+        enigma = EnigmaMachine([rotor[0], rotor[1], rotor[2]], reflector,Pub)
+        #displayObject.set_text(enigma.get_display()[0]+" "+enigma.get_display()[1]+" "+enigma.get_display()[2])
+        #inputObject.set_text('')
+        #outObject.set_text('')        
+        #print('Case 2')
+def isSquareArea(square_area, point):
+    if(( square_area[0][0] < point[0])):
+            #print("position > x0")
+            if(( square_area[1][0] > point[0])):
+                #print("position < x1")
+                if(square_area[0][1] < point[1]):
+                    #print("position > y0")
+                    if (square_area[3][1] > point[1]):
+                        #print("position < y3")
+                        return True
+                    else:
+                        
+                        return False
+                else:
+                    return False
+            else: 
+                return False
+    else:
+        return False
+def drawSettings(buttons, canvas,point):
+    global RING_SETTING_BORDER, RING_SETTING_COLOR
+    for n in range(0,2):
+        if isSquareArea(buttons[n], point):
+            canvas.draw_polygon(buttons[n], 1, RING_SETTING_BORDER,RING_SETTING_COLOR[1])
+        else:
+            canvas.draw_polygon(buttons[n], 1, RING_SETTING_BORDER,RING_SETTING_COLOR[0])
+            #draw left and right signs
+    canvas.draw_text('<<', [buttons[0][0][0]+3,buttons[0][0][1]+15], 20, 'Black')
+    canvas.draw_text('>>', [buttons[1][0][0]+3,buttons[1][0][1]+15], 20, 'Black')
+def drawResetButton(button, canvas, point,switch):
+    global RING_SETTING_BORDER, RING_SETTING_COLOR
+    if isSquareArea(button,point):
+        if switch%2 == 1:	
+            canvas.draw_polygon(button, 1, RING_SETTING_BORDER,RING_SETTING_COLOR[1])
+        else:
+            canvas.draw_polygon(button, 1, RING_SETTING_BORDER,RING_SETTING_COLOR[0])
+    else:
+        canvas.draw_polygon(button, 1, RING_SETTING_BORDER,RING_SETTING_COLOR[0])
+    canvas.draw_text('RESET', [button[0][0]+34,button[0][1]+13], 13, 'Black')
+def adjustRingOderDisplayValue(canvas,x,y, ring):
+    if ring == 'I':
+        canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+        canvas.draw_text(ring, (x+52, int(y+TGLB_HEIGHT/2+4)), 15, 'White')
+    elif ring == 'II':
+        canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+        canvas.draw_text(ring, (x+50, int(y+TGLB_HEIGHT/2+4)), 15, 'White')	
+    elif ring == 'III':
+        canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+        canvas.draw_text(ring, (x+47, int(y+TGLB_HEIGHT/2+4)), 15, 'White')	
+    elif ring == 'IV' or ring == 'VI' :
+        canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+        canvas.draw_text(ring, (x+48, int(y+TGLB_HEIGHT/2+4)), 15, 'White')	
+    elif ring == 'V':
+        canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+        canvas.draw_text(ring, (x+50, int(y+TGLB_HEIGHT/2+4)), 15, 'White')	
+    elif ring == 'VII':
+        canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+        canvas.draw_text(ring, (x+45, int(y+TGLB_HEIGHT/2+4)), 15, 'White')	
+    else:
+        canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+        canvas.draw_text(ring, (x+42, int(y+TGLB_HEIGHT/2+4)), 15, 'White') 
+# Handler for mouse click
+# Handler to draw on canvas
+def draw(canvas):
+    global Pub,PubUI,rotor,reflector,enigma,rotorUI,reflectorUI,TIMER
+    global PRESSED_COUNTER, OUTPUT_CHR,LAMPPOSITION,OX, OY, RESET_POSITION
+    global RING_SETTING, RINGS, REFLECTOR_SETTING
+    global SWITCH_CLCK
+    global CIPHERS,DECIPHERS
+    ##############################################################################
+    #..................STATIC.....................
+    x = OX
+    y = OY
+
+    #draw console background
+    canvas.draw_polygon([[x, y], [x+6*TGLB_WIDTH+5*X_GAP, y], [x+6*TGLB_WIDTH+5*X_GAP, y+2*TGLB_HEIGHT+2*Y_GAP], [x,y+2*TGLB_HEIGHT+2*Y_GAP]], 2, '#222','#222')
+
+    #draw plugboard setting
+    #y = y + TGLB_HEIGHT + Y_GAP
+    canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    canvas.draw_text("PLUG SETTING:", (x+5, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+        
+    #draw plug value
+    if PLUG_SETTING ==" ":
+        canvas.draw_polygon([[x+TGLB_WIDTH + X_GAP, y], [x+TGLB_WIDTH + X_GAP+3*TGLB_WIDTH+ 2*X_GAP, y], [x+TGLB_WIDTH + X_GAP+3*TGLB_WIDTH+ 2*X_GAP,y+TGLB_HEIGHT], [x+TGLB_WIDTH + X_GAP,y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+        canvas.draw_text("__ __ __ __ __ __ __ __ __ __       [ 10 PAIRS ONLY ]", (x+TGLB_WIDTH + X_GAP+5, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+    else:
+        canvas.draw_polygon([[x+TGLB_WIDTH + X_GAP, y], [x+TGLB_WIDTH + X_GAP+3*TGLB_WIDTH+ 2*X_GAP, y], [x+TGLB_WIDTH + X_GAP+3*TGLB_WIDTH+ 2*X_GAP,y+TGLB_HEIGHT], [x+TGLB_WIDTH + X_GAP,y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+        canvas.draw_text(PLUG_SETTING, (x+TGLB_WIDTH + X_GAP+5, int(y+TGLB_HEIGHT/2+4)), 15, 'White')
+    #draw reset background
+    canvas.draw_polygon([[x+4*TGLB_WIDTH + 4*X_GAP, y], [(x+4*TGLB_WIDTH + 4*X_GAP)+TGLB_WIDTH, y], [(x+4*TGLB_WIDTH + 4*X_GAP)+TGLB_WIDTH,y+TGLB_HEIGHT], [x+4*TGLB_WIDTH + 4*X_GAP,y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    canvas.draw_text("RESET MACHINE:", ((x+4*TGLB_WIDTH + 4*X_GAP)+2, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+    #draw reset button's background
+    canvas.draw_polygon([[x+5*TGLB_WIDTH + 5*X_GAP, y], [(x+5*TGLB_WIDTH + 5*X_GAP)+TGLB_WIDTH, y], [(x+5*TGLB_WIDTH + 5*X_GAP)+TGLB_WIDTH,y+TGLB_HEIGHT], [x+5*TGLB_WIDTH + 5*X_GAP,y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    #draw blank area. this area might contains element in the future
+    canvas.draw_polygon([[x+4*TGLB_WIDTH + 4*X_GAP, y+TGLB_HEIGHT+Y_GAP], [(x+4*TGLB_WIDTH + 4*X_GAP)+TGLB_WIDTH, y+TGLB_HEIGHT+Y_GAP], [(x+4*TGLB_WIDTH + 4*X_GAP)+TGLB_WIDTH,(y+TGLB_HEIGHT+Y_GAP)+TGLB_HEIGHT], [x+4*TGLB_WIDTH + 4*X_GAP,(y+TGLB_HEIGHT+Y_GAP)+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    canvas.draw_polygon([[x+5*TGLB_WIDTH + 5*X_GAP, y+TGLB_HEIGHT+Y_GAP], [(x+5*TGLB_WIDTH + 5*X_GAP)+TGLB_WIDTH, y+TGLB_HEIGHT+Y_GAP], [(x+5*TGLB_WIDTH + 5*X_GAP)+TGLB_WIDTH,(y+TGLB_HEIGHT+Y_GAP)+TGLB_HEIGHT], [x+5*TGLB_WIDTH + 5*X_GAP,(y+TGLB_HEIGHT+Y_GAP)+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    #draw blank black area
+    canvas.draw_polygon([[x + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP, y], [x + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP+BOARD_W, y], [x + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP+BOARD_W,y+2*TGLB_HEIGHT+2*Y_GAP], [x + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP,y+2*TGLB_HEIGHT+2*Y_GAP]], 2, "#222","#222")
+    #draw green blank area
+    canvas.draw_polygon([[x + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP, y], [x + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP+BOARD_W, y], [x + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP+BOARD_W,y+2*TGLB_HEIGHT+Y_GAP], [x + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP,y+2*TGLB_HEIGHT+Y_GAP]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    #draw input label
+    canvas.draw_polygon([[x, y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP], [x + TGLB_WIDTH, y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP], [x + TGLB_WIDTH,(y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP)+TGLB_HEIGHT], [x ,(y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP)+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    canvas.draw_text("INPUTS:", (x+5, int((y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP)+TGLB_HEIGHT/2+4)), 13, 'White')
+    #draw the background of input values
+    canvas.draw_polygon([[x+TGLB_WIDTH+X_GAP, y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP], [(x+TGLB_WIDTH+X_GAP) + 5*TGLB_WIDTH+4*X_GAP+ROTOR_BOARD_GAP+BOARD_W, y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP], [(x+TGLB_WIDTH+X_GAP) + 5*TGLB_WIDTH+4*X_GAP+ROTOR_BOARD_GAP+BOARD_W,(y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP)+TGLB_HEIGHT], [x+TGLB_WIDTH+X_GAP ,(y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP)+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    canvas.draw_text(CIPHERS, ((x+TGLB_WIDTH+X_GAP)+5, int((y+4*TGLB_HEIGHT+CHIAN_H+6*Y_GAP)+TGLB_HEIGHT/2+4)), 13, 'White')
+    #draw out label
+    canvas.draw_polygon([[x, y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP], [x + TGLB_WIDTH, y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP], [x + TGLB_WIDTH,(y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP)+TGLB_HEIGHT], [x ,(y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP)+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    canvas.draw_text("OUTPUTS:", (x+5, int((y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP)+TGLB_HEIGHT/2+4)), 13, 'White')
+    #draw the background of out values
+    canvas.draw_polygon([[x+TGLB_WIDTH+X_GAP, y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP], [(x+TGLB_WIDTH+X_GAP) + 5*TGLB_WIDTH+4*X_GAP+ROTOR_BOARD_GAP+BOARD_W, y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP], [(x+TGLB_WIDTH+X_GAP) + 5*TGLB_WIDTH+4*X_GAP+ROTOR_BOARD_GAP+BOARD_W,(y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP)+TGLB_HEIGHT], [x+TGLB_WIDTH+X_GAP ,(y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP)+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    canvas.draw_text(DECIPHERS, ((x+TGLB_WIDTH+X_GAP)+5, int((y+5*TGLB_HEIGHT+CHIAN_H+7*Y_GAP)+TGLB_HEIGHT/2+4)), 13, 'White')
+    #draw ring orders
+    y = y + TGLB_HEIGHT + Y_GAP
+    canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+    canvas.draw_text("RING SETTING:", (x+5, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+    
+    #draw ring orders's value
+    
+    if len(str(RING_SETTING[0])) == 1:
+        #print('1')
+        canvas.draw_polygon([[x+TGLB_WIDTH + X_GAP, y], [(x+TGLB_WIDTH + X_GAP) + TGLB_WIDTH, y], [(x+TGLB_WIDTH + X_GAP) + TGLB_WIDTH,y+TGLB_HEIGHT], [(x+TGLB_WIDTH + X_GAP),y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+        canvas.draw_text(str(RING_SETTING[0]), (x+TGLB_WIDTH + X_GAP+52, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+    else:
+        #print('2')
+        canvas.draw_polygon([[x+TGLB_WIDTH + X_GAP, y], [(x+TGLB_WIDTH + X_GAP) + TGLB_WIDTH, y], [(x+TGLB_WIDTH + X_GAP) + TGLB_WIDTH,y+TGLB_HEIGHT], [(x+TGLB_WIDTH + X_GAP),y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+        canvas.draw_text(str(RING_SETTING[0]), (x+TGLB_WIDTH + X_GAP+48, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+    #draw second ring's order
+    if len(str(RING_SETTING[1])) == 1:
+        #print('1')
+        canvas.draw_polygon([[x+2*TGLB_WIDTH + 2*X_GAP, y], [(x+2*TGLB_WIDTH + 2*X_GAP) + TGLB_WIDTH, y], [(x+2*TGLB_WIDTH + 2*X_GAP) + TGLB_WIDTH,y+TGLB_HEIGHT], [(x+2*TGLB_WIDTH + 2*X_GAP),y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+        canvas.draw_text(str(RING_SETTING[1]), ((x+2*TGLB_WIDTH + 2*X_GAP)+52, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+    else:
+        #print('2')
+        canvas.draw_polygon([[x+2*TGLB_WIDTH + 2*X_GAP, y], [(x+2*TGLB_WIDTH + 2*X_GAP) + TGLB_WIDTH, y], [(x+2*TGLB_WIDTH + 2*X_GAP) + TGLB_WIDTH,y+TGLB_HEIGHT], [(x+2*TGLB_WIDTH + 2*X_GAP),y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+        canvas.draw_text(str(RING_SETTING[1]), ((x+2*TGLB_WIDTH + 2*X_GAP)+48, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+    
+    
+    #draw third ring's order
+    if len(str(RING_SETTING[2])) == 1:
+        #print('1')
+        canvas.draw_polygon([[x+3*TGLB_WIDTH + 3*X_GAP, y], [(x+3*TGLB_WIDTH + 3*X_GAP) + TGLB_WIDTH, y], [(x+3*TGLB_WIDTH + 3*X_GAP) + TGLB_WIDTH,y+TGLB_HEIGHT], [(x+3*TGLB_WIDTH + 3*X_GAP),y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+        canvas.draw_text(str(RING_SETTING[2]), ((x+3*TGLB_WIDTH + 3*X_GAP)+52, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+    else:
+        #print('2')
+        canvas.draw_polygon([[x+3*TGLB_WIDTH + 3*X_GAP, y], [(x+3*TGLB_WIDTH + 3*X_GAP) + TGLB_WIDTH, y], [(x+3*TGLB_WIDTH + 3*X_GAP) + TGLB_WIDTH,y+TGLB_HEIGHT], [(x+3*TGLB_WIDTH + 3*X_GAP),y+TGLB_HEIGHT]], 2, SETTING_CONSOLE,SETTING_CONSOLE)
+        canvas.draw_text(str(RING_SETTING[2]), ((x+3*TGLB_WIDTH + 3*X_GAP)+48, int(y+TGLB_HEIGHT/2+4)), 13, 'White')
+    
+    x = OX
+    #y = y + Y_GAP
+    y = OY + 2*TGLB_HEIGHT+3*Y_GAP
+    #draw rotor's background
+    
+    canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+    canvas.draw_text(REFLECTOR_SETTING, (x+52, int(y+TGLB_HEIGHT/2+4)), 15, 'White')
+    #draw rotors' background
+    bg_y = y+TGLB_HEIGHT+Y_GAP
+    canvas.draw_polygon([[x,bg_y],[x+TGLB_WIDTH, bg_y], [x+TGLB_WIDTH, bg_y+CHIAN_H], [x,bg_y+CHIAN_H]],2,REFLECTOR_B,REFLECTOR_B)
+    #draw footer
+    bg_footer_y = bg_y + CHIAN_H + Y_GAP
+    canvas.draw_polygon([[x, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y+TGLB_HEIGHT], [x,bg_footer_y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+    #end of footer
+    
+    #draw ring order setting
+    x = x+TGLB_WIDTH + X_GAP
+    adjustRingOderDisplayValue(canvas,x,y,RINGS[0])    
+    #draw rotors' background
+    canvas.draw_polygon([[x,bg_y],[x+TGLB_WIDTH, bg_y], [x+TGLB_WIDTH, bg_y+CHIAN_H], [x,bg_y+CHIAN_H]],2,ROTOR1_B,ROTOR1_B)
+    #draw footer
+    canvas.draw_polygon([[x, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y+TGLB_HEIGHT], [x,bg_footer_y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+    #end of footer
+    
+    #draw dispaly val
+    dis_y = bg_footer_y + 2
+    dis_x = x + 2 + 16
+    canvas.draw_polygon([[dis_x, dis_y], [dis_x+74, dis_y], [dis_x+74, dis_y+22], [dis_x,dis_y+22]], 2, 'Black','White')
+    #draw display text
+    canvas.draw_text(enigma.get_display()[0], (dis_x + 28, bg_footer_y + 18), 20, 'Black')
+    
+    x = x+TGLB_WIDTH + X_GAP
+    #draw ring order setting
+    adjustRingOderDisplayValue(canvas,x,y,RINGS[1]) 
+    #draw rotors' background
+    canvas.draw_polygon([[x,bg_y],[x+TGLB_WIDTH, bg_y], [x+TGLB_WIDTH, bg_y+CHIAN_H], [x,bg_y+CHIAN_H]],2,ROTOR2_B,ROTOR2_B)
+    #draw footer
+    canvas.draw_polygon([[x, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y+TGLB_HEIGHT], [x,bg_footer_y+TGLB_HEIGHT]], 2, REFLECTOR_B, REFLECTOR_B)
+    #end of footer
+    
+    #draw dispaly val
+    dis_y = bg_footer_y + 2
+    dis_x = x + 2 + 16
+    canvas.draw_polygon([[dis_x, dis_y], [dis_x+74, dis_y], [dis_x+74, dis_y+22], [dis_x,dis_y+22]], 2, 'Black','White')
+    #draw display text
+    canvas.draw_text(enigma.get_display()[1], (dis_x + 28, bg_footer_y + 18), 20, 'Black')
+    
+    x = x+TGLB_WIDTH + X_GAP
+    #draw ring order setting
+    adjustRingOderDisplayValue(canvas,x,y,RINGS[2])
+    #draw rotors' background
+    canvas.draw_polygon([[x,bg_y],[x+TGLB_WIDTH, bg_y], [x+TGLB_WIDTH, bg_y+CHIAN_H], [x,bg_y+CHIAN_H]],2,ROTOR3_B,ROTOR3_B)
+    #draw footer
+    canvas.draw_polygon([[x, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y+TGLB_HEIGHT], [x,bg_footer_y+TGLB_HEIGHT]], 2, REFLECTOR_B,REFLECTOR_B)
+    #end of footer
+    
+    #draw dispaly val
+    dis_y = bg_footer_y + 2
+    dis_x = x + 2 + 16
+    canvas.draw_polygon([[dis_x, dis_y], [dis_x+74, dis_y], [dis_x+74, dis_y+22], [dis_x,dis_y+22]], 2, 'Black','White')
+    #draw display text
+    canvas.draw_text(enigma.get_display()[2], (dis_x + 28, bg_footer_y + 18), 20, 'Black')
+    
+    x = x+TGLB_WIDTH + X_GAP
+    canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, ETW_B, ETW_B)
+    canvas.draw_text("ETW", (x+30, int(y+TGLB_HEIGHT/2+4)), 15, 'White')
+    #draw rotors' background
+    canvas.draw_polygon([[x,bg_y],[x+TGLB_WIDTH, bg_y], [x+TGLB_WIDTH, bg_y+CHIAN_H], [x,bg_y+CHIAN_H]],2,ETW_B,ETW_B)
+    #draw footer
+    canvas.draw_polygon([[x, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y+TGLB_HEIGHT], [x,bg_footer_y+TGLB_HEIGHT]], 2, ETW_B,ETW_B)
+    #end of footer
+    
+    x = x+TGLB_WIDTH + X_GAP
+    canvas.draw_polygon([[x, y], [x+TGLB_WIDTH, y], [x+TGLB_WIDTH, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, PLUG_B,PLUG_B)
+    canvas.draw_text("PlugBoard", (x+20, int(y+TGLB_HEIGHT/2+4)), 15, 'White')
+    #draw rotors' background
+    canvas.draw_polygon([[x,bg_y],[x+TGLB_WIDTH, bg_y], [x+TGLB_WIDTH, bg_y+CHIAN_H], [x,bg_y+CHIAN_H]],2,PLUG_B,PLUG_B)
+    #draw footer
+    canvas.draw_polygon([[x, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y], [x+TGLB_WIDTH, bg_footer_y+TGLB_HEIGHT], [x,bg_footer_y+TGLB_HEIGHT]], 2, PLUG_B,PLUG_B)
+    #end of footer
+    
+    #draw lamp board label
+    x = 5 + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP
+    canvas.draw_polygon([[x,y], [x+BOARD_W, y], [x+BOARD_W, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, PLUG_B,PLUG_B)
+    canvas.draw_text("LAMP BOARD", (x+25, int(y+TGLB_HEIGHT/2+4)), 15, 'White') 
+    canvas.draw_text("This emulator uses a browser based Python", (720, 20), 15, 'Yellow')
+    canvas.draw_text("interpreter (codeskulptor), and works with", (720, 40), 15, 'Yellow')
+    canvas.draw_text("Firefox & Opera browsers.", (720, 60), 15, 'Lime')
+                                     
+    y = y + TGLB_HEIGHT + Y_GAP
+    #before draw the panel, store the lampboard base link point
+    tmp1 = [x, y + BOARD_H/2]
+    LB_BASE_LINK[0] = [tmp1[0]-3, tmp1[1]-3]
+    LB_BASE_LINK[1] = [tmp1[0], tmp1[1]-3]
+    LB_BASE_LINK[2] = [tmp1[0], tmp1[1]+3]
+    LB_BASE_LINK[3] = [tmp1[0]-3, tmp1[1]+3]
+    LB_BASE_LINK[4] = [tmp1[0]-3, tmp1[1]]
+    #draw base link
+    canvas.draw_polygon([LB_BASE_LINK[0],LB_BASE_LINK[1],LB_BASE_LINK[2],LB_BASE_LINK[3]],2,'#767171','#767171')
+    #draw lampboard Panel
+    canvas.draw_polygon([[x,y], [x+BOARD_W, y], [x+BOARD_W, y+BOARD_H], [x,y+BOARD_H]], 2, '#767171','#DEEBF7')
+    tmpX = x
+    tmpY = y
+    #draw Keyboard
+    x = tmpX
+    y = tmpY+ 4*Y_GAP+BOARD_H
+    
+    #KeyB= Board label
+    canvas.draw_polygon([[x,y], [x+BOARD_W, y], [x+BOARD_W, y+TGLB_HEIGHT], [x,y+TGLB_HEIGHT]], 2, PLUG_B,PLUG_B)
+    canvas.draw_text("KEY BOARD", (x+25, int(y+TGLB_HEIGHT/2+4)), 15, 'White')
+    
+    #Key Board Panel
+    y = y + TGLB_HEIGHT	+ Y_GAP
+    #before draw the panel, store the keyboard base link point
+    tmp2 = [x, y + BOARD_H/2]
+    KB_BASE_LINK[0] = [tmp2[0]-3, tmp2[1]-3]
+    KB_BASE_LINK[1] = [tmp2[0], tmp2[1]-3]
+    KB_BASE_LINK[2] = [tmp2[0], tmp2[1]+3]
+    KB_BASE_LINK[3] = [tmp2[0]-3, tmp2[1]+3]
+    KB_BASE_LINK[4] = [tmp2[0]-3, tmp2[1]]
+    #draw base link
+    canvas.draw_polygon([KB_BASE_LINK[0],KB_BASE_LINK[1],KB_BASE_LINK[2],KB_BASE_LINK[3]],2,'#767171','#767171')
+    #draw Keybaord Panel
+    canvas.draw_polygon([[x,y], [x+BOARD_W, y], [x+BOARD_W, y+BOARD_H], [x,y+BOARD_H]], 2, '#767171','#DEEBF7')
+    
+    LampB_UI = LampBoardUI()
+    LampB_UI.drawLampboardUI(canvas)
+    
+    KeyB_UI = KeyBoardUI()
+    KeyB_UI.drawKeyboardUI(canvas)
+    
+    #PubUI = PlugboardUI(Pub)
+    PubUI.drawPlugBoardUI(canvas)    
+    
+    etw = ETW_UI()
+    etw.drawETW(canvas)
+    
+    rotorUI[0].drawRotor(canvas)
+
+    rotorUI[1].drawRotor(canvas)
+
+    rotorUI[2].drawRotor(canvas)
+    
+
+    reflector = Rotor('my reflector', REFLECTORS['B'])
+    reflectorUI.drawReflector(canvas)
+    for ring in range(0, 3):
+        drawSettings(RING_SETTING_AREA[ring], canvas, RING_SETTING_POSITION)
+        drawSettings(RING_ORDER_AREA[ring], canvas, RING_SETTING_POSITION)
+    #draw reflector
+    drawSettings(REF_SET_AREA, canvas, RING_SETTING_POSITION)
+    drawResetButton(RESET_BTN_AREA, canvas, RESET_POSITION,SWITCH_CLCK)    
+    if PRESSED_COUNTER >= 1:
+        TIMER = (TIMER+1)%1000
+        if TIMER >TIMER_STEP:
+            canvas.draw_line(KB_BASE_LINK[4],PubUI.rightPinButtons[enigma.plug_in[0]].middleRightCor[1],1,'#00B0EC')
+            canvas.draw_line(PubUI.rightPinButtons[enigma.plug_in[0]].middleRightCor[0], PubUI.rightPinButtons[enigma.plug_in[0]].middleRightCor[1], 2,'#00B0EC')
+        #Inputs Wires
+        #draw selected right plugboard pin
+            canvas.draw_polygon(PubUI.rightPinButtons[enigma.plug_in[0]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(PubUI.rightPinButtons[enigma.plug_in[0]].character), PubUI.rightPinButtons[enigma.plug_in[0]].characterCor, 12, "White")
+        #draw pins' connectors
+        if TIMER >TIMER_STEP*2:
+        #draw pins' connectors
+            canvas.draw_line(PubUI.rightPinButtons[enigma.plug_in[0]].middleLeftCor[0], PubUI.rightPinButtons[enigma.plug_in[0]].middleLeftCor[1], 2,'#00B0EC')
+        
+        #draw selected left plugboard pin
+            canvas.draw_polygon(PubUI.leftPinButtons[enigma.plug_in[1]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(PubUI.leftPinButtons[enigma.plug_in[1]].character), PubUI.leftPinButtons[enigma.plug_in[1]].characterCor, 12, "White")
+            canvas.draw_line(PubUI.leftPinButtons[enigma.plug_in[1]].middleRightCor[0], PubUI.leftPinButtons[enigma.plug_in[1]].middleRightCor[1], 2,'#00B0EC')
+        
+        #draws link bwtween pins
+            canvas.draw_line(PubUI.rightPinButtons[enigma.plug_in[0]].middleLeftCor[1], PubUI.leftPinButtons[enigma.plug_in[1]].middleRightCor[1], 1,'#00B0EC') 
+        #draw selected right ETW pin
+            canvas.draw_polygon(etw.rightPinButtons[enigma.plug_in[1]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(etw.rightPinButtons[enigma.plug_in[1]].character), etw.rightPinButtons[enigma.plug_in[1]].characterCor, 12, "White")
+        
+        
+        #draw left connectors
+        if TIMER > TIMER_STEP*3:
+        #draw right connectors
+            canvas.draw_line(etw.rightPinButtons[enigma.plug_in[1]].middleLeftCor[0], etw.rightPinButtons[enigma.plug_in[1]].middleLeftCor[1], 2,'#00B0EC')
+        #draw selected left ETW pin
+            canvas.draw_polygon(etw.leftPinButtons[enigma.plug_in[1]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(etw.leftPinButtons[enigma.plug_in[1]].character), etw.leftPinButtons[enigma.plug_in[1]].characterCor, 12, "White")
+            canvas.draw_line(etw.leftPinButtons[enigma.plug_in[1]].middleRightCor[0], etw.leftPinButtons[enigma.plug_in[1]].middleRightCor[1], 2,'#00B0EC')
+        #draw link betwee pins
+            canvas.draw_line(etw.rightPinButtons[enigma.plug_in[1]].middleLeftCor[1], etw.leftPinButtons[enigma.plug_in[1]].middleRightCor[1], 1,'#00B0EC')
+        #draw selected rotor3, right pin
+            canvas.draw_polygon(rotorUI[2].rightPinButtons[enigma.rotors_in[2][0]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[2].rightPinButtons[enigma.rotors_in[2][0]].character), rotorUI[2].rightPinButtons[enigma.rotors_in[2][0]].characterCor, 12, "White") 
+        
+        if TIMER > TIMER_STEP*4:
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[2].rightPinButtons[enigma.rotors_in[2][0]].middleLeftCor[0], rotorUI[2].rightPinButtons[enigma.rotors_in[2][0]].middleLeftCor[1], 2,'#00B0EC')
+        #draw selected rotor3, left pin
+            canvas.draw_polygon(rotorUI[2].leftPinButtons[enigma.rotors_in[2][1]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[2].leftPinButtons[enigma.rotors_in[2][1]].character), rotorUI[2].leftPinButtons[enigma.rotors_in[2][1]].characterCor, 12, "White")
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[2].leftPinButtons[enigma.rotors_in[2][1]].middleRightCor[0], rotorUI[2].leftPinButtons[enigma.rotors_in[2][1]].middleRightCor[1], 2,'#00B0EC')
+        #draws link bwtween pins
+            canvas.draw_line(rotorUI[2].rightPinButtons[enigma.rotors_in[2][0]].middleLeftCor[1], rotorUI[2].leftPinButtons[enigma.rotors_in[2][1]].middleRightCor[1], 1,'#00B0EC')
+        
+        #draw selected rotor2, right pins
+            canvas.draw_polygon(rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].character), rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].characterCor, 12, "White") 
+        
+        if TIMER > TIMER_STEP*5:
+        #draw selected rotor2, left pin
+            canvas.draw_polygon(rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].character), rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].characterCor, 12, "White")
+        
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].middleRightCor[0], rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].middleRightCor[1], 2,'#00B0EC')
+        #draws link bwtween pins
+            canvas.draw_line(rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].middleLeftCor[1], rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].middleRightCor[1], 1,'#00B0EC')
+        
+        #draw selected rotor2, right pin
+            canvas.draw_polygon(rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].character), rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].characterCor, 12, "White") 
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].middleLeftCor[0], rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].middleLeftCor[1], 2,'#00B0EC')
+        
+        #draw selected rotor2, left pin
+            canvas.draw_polygon(rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].character), rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].characterCor, 12, "White")
+        #draw selected rotor1, right pins
+            canvas.draw_polygon(rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].character), rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].characterCor, 12, "White") 
+        
+        if TIMER > TIMER_STEP*6:
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].middleRightCor[0], rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].middleRightCor[1], 2,'#00B0EC')
+        #draws link bwtween pins
+            canvas.draw_line(rotorUI[1].rightPinButtons[enigma.rotors_in[1][0]].middleLeftCor[1], rotorUI[1].leftPinButtons[enigma.rotors_in[1][1]].middleRightCor[1], 1,'#00B0EC')
+        
+        
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].middleLeftCor[0], rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].middleLeftCor[1], 2,'#00B0EC')
+        
+        #draw selected rotor1, left pin
+            canvas.draw_polygon(rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].character), rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].characterCor, 12, "White")
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].middleRightCor[0], rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].middleRightCor[1], 2,'#00B0EC')
+        #draws link bwtween pins
+            canvas.draw_line(rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].middleLeftCor[1], rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].middleRightCor[1], 1,'#00B0EC')
+        #draw selected rotor2, right pin
+            canvas.draw_polygon(rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].character), rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].characterCor, 12, "White") 
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].middleLeftCor[0], rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].middleLeftCor[1], 2,'#1E90FF')
+        
+        #draw selected rotor1, left pin
+            canvas.draw_polygon(rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].character), rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].characterCor, 12, "White")
+        #right pin
+            canvas.draw_polygon(reflectorUI.rightPinButtons[enigma.reflector_in[0]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(reflectorUI.rightPinButtons[enigma.reflector_in[0]].character), reflectorUI.rightPinButtons[enigma.reflector_in[0]].characterCor, 12, "White")
+        if TIMER > TIMER_STEP*7:
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].middleRightCor[0], rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].middleRightCor[1], 2,'#00B0EC')
+        #draws link bwtween pins
+            canvas.draw_line(rotorUI[0].rightPinButtons[enigma.rotors_in[0][0]].middleLeftCor[1], rotorUI[0].leftPinButtons[enigma.rotors_in[0][1]].middleRightCor[1], 1,'#00B0EC')
+       
+        #draw reflector
+        #draw pins' connectors
+            canvas.draw_line(reflectorUI.rightPinButtons[enigma.reflector_in[0]].middleLeftCor[0], reflectorUI.rightPinButtons[enigma.reflector_in[0]].middleLeftCor[1], 2,'#00B0EC')
+        #leftt pin
+            canvas.draw_polygon(reflectorUI.leftPinButtons[enigma.reflector_in[1]].coordinates , 2,'Black','#00B0EC')
+            canvas.draw_text(str(reflectorUI.leftPinButtons[enigma.reflector_in[1]].character), reflectorUI.leftPinButtons[enigma.reflector_in[1]].characterCor, 12, "White")
+        #draw pins' connectors
+            canvas.draw_line(reflectorUI.leftPinButtons[enigma.reflector_in[1]].middleRightCor[0], reflectorUI.leftPinButtons[enigma.reflector_in[1]].middleRightCor[1], 2,'#00B0EC')
+        #draws direct links
+            canvas.draw_line(reflectorUI.rightPinButtons[enigma.reflector_in[0]].middleLeftCor[1], reflectorUI.leftPinButtons[enigma.reflector_in[1]].middleRightCor[1], 1,'#00B0EC')
+        if TIMER > TIMER_STEP*8:
+            canvas.draw_line(reflectorUI.leftPinButtons[enigma.reflector_in[1]].middleRightCor[1], reflectorUI.leftPinButtons[enigma.reflector_out[0]].middleRightCor[1], 1,'white')
+        #Ouputs Wires
+        #draw reflector
+        #left pin
+            canvas.draw_polygon(reflectorUI.leftPinButtons[enigma.reflector_out[0]].coordinates , 2,'Black','Yellow')
+          
+            canvas.draw_text(str(reflectorUI.leftPinButtons[enigma.reflector_out[0]].character), reflectorUI.leftPinButtons[enigma.reflector_out[0]].characterCor, 12, "Black")
+        
+        #draw pins' connectors
+            canvas.draw_line(reflectorUI.leftPinButtons[enigma.reflector_out[0]].middleRightCor[0], reflectorUI.leftPinButtons[enigma.reflector_out[0]].middleRightCor[1], 2,'Yellow')
+        if TIMER > TIMER_STEP*9: 
+        #right pin
+            canvas.draw_polygon(reflectorUI.rightPinButtons[enigma.reflector_out[1]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(reflectorUI.rightPinButtons[enigma.reflector_out[1]].character), reflectorUI.rightPinButtons[enigma.reflector_out[1]].characterCor, 12, "Black")
+        #draw pins' connectors
+            canvas.draw_line(reflectorUI.rightPinButtons[enigma.reflector_out[1]].middleLeftCor[0], reflectorUI.rightPinButtons[enigma.reflector_out[1]].middleLeftCor[1], 2,'Yellow')
+        
+        #draws direct links
+            canvas.draw_line(reflectorUI.leftPinButtons[enigma.reflector_out[0]].middleRightCor[1], reflectorUI.rightPinButtons[enigma.reflector_out[1]].middleLeftCor[1], 1,'Yellow')
+        
+        #draw rotor1
+        #draw selected rotor1, left pin
+            canvas.draw_polygon(rotorUI[0].leftPinButtons[enigma.rotors_out[0][0]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(rotorUI[0].leftPinButtons[enigma.rotors_out[0][0]].character), rotorUI[0].leftPinButtons[enigma.rotors_out[0][0]].characterCor, 12, "Black")
+        if TIMER > TIMER_STEP*10:
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[0].leftPinButtons[enigma.rotors_out[0][0]].middleRightCor[0], rotorUI[0].leftPinButtons[enigma.rotors_out[0][0]].middleRightCor[1], 2,'Yellow')
+        
+        #draw selected rotor1, right pins
+            canvas.draw_polygon(rotorUI[0].rightPinButtons[enigma.rotors_out[0][1]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(rotorUI[0].rightPinButtons[enigma.rotors_out[0][1]].character), rotorUI[0].rightPinButtons[enigma.rotors_out[0][1]].characterCor, 12, "Black") 
+        
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[0].rightPinButtons[enigma.rotors_out[0][1]].middleLeftCor[0], rotorUI[0].rightPinButtons[enigma.rotors_out[0][1]].middleLeftCor[1], 2,'Yellow')
+        #draws link bwtween pins
+            canvas.draw_line(rotorUI[0].rightPinButtons[enigma.rotors_out[0][1]].middleLeftCor[1], rotorUI[0].leftPinButtons[enigma.rotors_out[0][0]].middleRightCor[1], 1,'Yellow')
+    
+        ####################
+        #draw rotor2
+        #draw selected rotor2, left pin
+            canvas.draw_polygon(rotorUI[1].leftPinButtons[enigma.rotors_out[1][0]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(rotorUI[1].leftPinButtons[enigma.rotors_out[1][0]].character), rotorUI[1].leftPinButtons[enigma.rotors_out[1][0]].characterCor, 12, "Black")
+        if TIMER > TIMER_STEP*11: 
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[1].leftPinButtons[enigma.rotors_out[1][0]].middleRightCor[0], rotorUI[1].leftPinButtons[enigma.rotors_out[1][0]].middleRightCor[1], 2,'Yellow')
+        
+        #draw selected rotor2, right pins
+            canvas.draw_polygon(rotorUI[1].rightPinButtons[enigma.rotors_out[1][1]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(rotorUI[1].rightPinButtons[enigma.rotors_out[1][1]].character), rotorUI[1].rightPinButtons[enigma.rotors_out[1][1]].characterCor, 12, "Black") 
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[1].rightPinButtons[enigma.rotors_out[1][1]].middleLeftCor[0], rotorUI[1].rightPinButtons[enigma.rotors_out[1][1]].middleLeftCor[1], 2,'Yellow')
+        #draws link bwtween pins
+            canvas.draw_line(rotorUI[1].rightPinButtons[enigma.rotors_out[1][1]].middleLeftCor[1], rotorUI[1].leftPinButtons[enigma.rotors_out[1][0]].middleRightCor[1], 1,'Yellow')
+
+        ####################
+        #draw rotor3
+        #draw selected rotor2, left pin
+            canvas.draw_polygon(rotorUI[2].leftPinButtons[enigma.rotors_out[2][0]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(rotorUI[2].leftPinButtons[enigma.rotors_out[2][0]].character), rotorUI[2].leftPinButtons[enigma.rotors_out[2][0]].characterCor, 12, "Black")
+        if TIMER > TIMER_STEP*12: 
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[2].leftPinButtons[enigma.rotors_out[2][0]].middleRightCor[0], rotorUI[2].leftPinButtons[enigma.rotors_out[2][0]].middleRightCor[1], 2,'Yellow')
+        
+        #draw selected rotor2, right pins
+            canvas.draw_polygon(rotorUI[2].rightPinButtons[enigma.rotors_out[2][1]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(rotorUI[2].rightPinButtons[enigma.rotors_out[2][1]].character), rotorUI[2].rightPinButtons[enigma.rotors_out[2][1]].characterCor, 12, "Black") 
+        #draw pins' connectors
+            canvas.draw_line(rotorUI[2].rightPinButtons[enigma.rotors_out[2][1]].middleLeftCor[0], rotorUI[2].rightPinButtons[enigma.rotors_out[2][1]].middleLeftCor[1], 2,'Yellow')
+        #draws link bwtween pins
+            canvas.draw_line(rotorUI[2].rightPinButtons[enigma.rotors_out[2][1]].middleLeftCor[1], rotorUI[2].leftPinButtons[enigma.rotors_out[2][0]].middleRightCor[1], 1,'Yellow')
+        
+        #draw selected left ETW pin
+            canvas.draw_polygon(etw.leftPinButtons[enigma.rotors_out[2][1]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(etw.leftPinButtons[enigma.rotors_out[2][1]].character), etw.leftPinButtons[enigma.rotors_out[2][1]].characterCor, 12, "Black")
+        if TIMER > TIMER_STEP*13: 
+        #draw left connectors
+            canvas.draw_line(etw.leftPinButtons[enigma.rotors_out[2][1]].middleRightCor[0], etw.leftPinButtons[enigma.rotors_out[2][1]].middleRightCor[1], 2,'Yellow')
+        
+        
+        #draw selected right ETW pin
+            canvas.draw_polygon(etw.rightPinButtons[enigma.rotors_out[2][1]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(etw.rightPinButtons[enigma.rotors_out[2][1]].character), etw.rightPinButtons[enigma.rotors_out[2][1]].characterCor, 12, "Black")
+        #draw right connectors
+            canvas.draw_line(etw.rightPinButtons[enigma.rotors_out[2][1]].middleLeftCor[0], etw.rightPinButtons[enigma.rotors_out[2][1]].middleLeftCor[1], 2,'Yellow')
+        #draw link betwee pins
+            canvas.draw_line(etw.rightPinButtons[enigma.rotors_out[2][1]].middleLeftCor[1], etw.leftPinButtons[enigma.rotors_out[2][1]].middleRightCor[1], 1,'Yellow')
+        
+        #draw selected left plugboard pin
+            canvas.draw_polygon(PubUI.leftPinButtons[enigma.plug_out[0]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(PubUI.leftPinButtons[enigma.plug_out[0]].character), PubUI.leftPinButtons[enigma.plug_out[0]].characterCor, 12, "Black")
+        if TIMER > TIMER_STEP*14: 
+        #draw pins' connectors
+            canvas.draw_line(PubUI.leftPinButtons[enigma.plug_out[0]].middleRightCor[0], PubUI.leftPinButtons[enigma.plug_out[0]].middleRightCor[1], 2,'Yellow')
+        
+        #draw selected right plugboard pin
+            canvas.draw_polygon(PubUI.rightPinButtons[enigma.plug_out[1]].coordinates , 2,'Black','Yellow')
+            canvas.draw_text(str(PubUI.rightPinButtons[enigma.plug_out[1]].character), PubUI.rightPinButtons[enigma.plug_out[1]].characterCor, 12, "Black")
+        #draw pins' connectors
+            canvas.draw_line(PubUI.rightPinButtons[enigma.plug_out[1]].middleLeftCor[0], PubUI.rightPinButtons[enigma.plug_out[1]].middleLeftCor[1], 2,'Yellow')
+        #draws link bwtween pins
+            canvas.draw_line(PubUI.rightPinButtons[enigma.plug_out[1]].middleLeftCor[1], PubUI.leftPinButtons[enigma.plug_out[0]].middleRightCor[1], 1,'Yellow')
+        
+        if TIMER > TIMER_STEP*15:
+            canvas.draw_line(PubUI.rightPinButtons[enigma.plug_out[1]].middleRightCor[0], PubUI.rightPinButtons[enigma.plug_out[1]].middleRightCor[1], 2,'Yellow')
+            canvas.draw_line(PubUI.rightPinButtons[enigma.plug_out[1]].middleRightCor[1], LB_BASE_LINK[4],1,'Yellow')
+        if TIMER == TIMER_STEP*15 + 1:
+            #print(OUTPUT_CHR)
+            for n in range(0,26):
+                
+                if LampB_UI.lampButtons[n].character == OUTPUT_CHR:
+                    
+                    LAMPPOSITION = LampB_UI.lampButtons[n].characterCor 
+                    #tmp2 = outObject.get_text()
+                    #outObject.set_text(tmp2 + OUTPUT_CHR)
+                    OUTPUT_CHR = ''
+                    CLICKED_CHR = ''
+#input_handler
+def input_plugsetting(plug_setting):
+    global POSITION, LAMPPOSITION, POSITIONKEY, PRESSED_COUNTER
+    global PLUG_SETTING
+    global RINGS,RING_SETTING
+    global Pub,rotor,reflector,enigma,rotorUI,reflectorUI
+    POSITION = [0,0]
+    LAMPPOSITION = [0,0]
+    POSITIONKEY = [0,0]
+    PRESSED_COUNTER = 0
+    PLUG_SETTING = plug_setting
+    #Helper instantite function
+    instantiateEnigma()
+    #print("Plug Setting Activated!")
+def input_rings(rings):
+    global POSITION, LAMPPOSITION, POSITIONKEY
+    global RINGS
+    global RING_SETTING, PRESSED_COUNTER
+    global UPDATE
+    global Pub,rotor,reflector,enigma,rotorUI,reflectorUI
+    POSITION = [0,0]
+    LAMPPOSITION = [0,0]
+    POSITIONKEY = [0,0]
+    PRESSED_COUNTER = 0
+    UPDATE = True
+    if rings != "":
+        tmp = rings.split()
+        RINGS = tmp
+        ringsObject.set_text(RINGS[0]+" "+RINGS[1]+" "+RINGS[2])
+        
+    #Helper function to instantiate Enigma Machine
+    instantiateEnigma()
+def input_ringsetting(ring_setting):
+    global POSITION, LAMPPOSITION, POSITIONKEY, PRESSED_COUNTER
+    global RINGS
+    global RING_SETTING
+    global UPDATE
+    global enigma,Pub,reflector,rotor,rotorUI,reflectorUI
+    POSITION = [0,0]
+    LAMPPOSITION = [0,0]
+    POSITIONKEY = [0,0]
+    PRESSED_COUNTER = 0
+    if ring_setting != "":
+        tmp = ring_setting.split()
+        RING_SETTING[0] = int(tmp[0])
+        RING_SETTING[1] = int(tmp[1])
+        RING_SETTING[2] = int(tmp[2])
+        #print(RING_SETTING)
+        ringsettingObject.set_text(str(RING_SETTING[0])+" "+str(RING_SETTING[1])+" "+str(RING_SETTING[2]))
+    
+    #Helper function to instantiate Enigma Machine
+    instantiateEnigma()
+def input_display(display):
+    global POSITION, LAMPPOSITION, POSITIONKEY, PRESSED_COUNTER
+    global Pub,rotor,reflector,enigma,rotorUI,reflectorUI
+    POSITION = [0,0]
+    LAMPPOSITION = [0,0]
+    POSITIONKEY = [0,0]
+    PRESSED_COUNTER = 0
+    dis = enigma.get_display()
+    x1 = dis[0]
+    y1 = dis[1]
+    z1 = dis[2]
+    
+    display_input = display.split()
+    x2 = display_input[0]
+    y2 = display_input[1]
+    z2 = display_input[2]
+    #print(ord(x1))
+    #print(ord(z2))
+    z2z1 = int((ord(z2)-65) - (ord(z1)-65))
+    z1z2 = int((ord(z1)-65) - (ord(z2)-65))
+    #print("distance: "+str(z2z1%26))
+    if abs(z2z1)>0:
+        if z2z1%26 < 13:
+            #print("Rotor 3 Shifting Down")
+            rotorUI[2].shiftDowns((z2z1%26))
+        else:
+            #print("Rotor 3 Shifting Up")
+            rotorUI[2].shiftUps((z1z2)%26)
+            
+    y2y1 = int((ord(y2)-65) - (ord(y1)-65))
+    y1y2 = int((ord(y1)-65) - (ord(y2)-65))
+    if abs(y2y1)>0:
+        if y2y1%26 < 13:
+            #print("Rotor 2 Shifting Down")
+            rotorUI[1].shiftDowns((y2y1%26))
+        else:
+            #print("Rptor 2 Shifting Up")
+            rotorUI[1].shiftUps((y1y2)%26)
+
+    x2x1 = int((ord(x2)-65) - (ord(x1)-65))
+    x1x2 = int((ord(x1)-65) - (ord(x2)-65))
+    if abs(x2x1)>0:
+        if x2x1%26 < 13:
+            #print("Rotor 1 Shifting Down")
+            rotorUI[0].shiftDowns((x2x1%26))
+        else:
+            #print("Rotor 1 Shifting Up")
+            rotorUI[0].shiftUps((x1x2)%26)
+
+    enigma.set_display(x2+y2+z2)
+    #print(enigma.get_display())
+    inputObject.set_text('')
+    outObject.set_text('')
+def input_string(input_str):
+    global POSITION , POSITIONKEY, LAMPPOSITION, TIMER
+    global PRESSED_COUNTER
+    global OUTPUT_CHR
+    global START_INDEX, END_INDEX
+    global outObject
+    global Pub,rotor,reflector,enigma,rotorUI,reflectorUI
+    previous_length = END_INDEX + 1
+    
+    instantiateEnigma()
+    text = input_str.upper()
+    inputObject.set_text(text)
+    tmp_output_texts = outObject.get_text()
+    tmp_output = ''
+    PRESSED_COUNTER = 0
+    KeyB_UI = KeyBoardUI()
+    LamB_UI = LampBoardUI()
+    for i in range(0,len(input_str)):
+        PRESSED_COUNTER = PRESSED_COUNTER + 1
+        CLICKED_CHR = text[i]
+        rotorUI[2].shiftDown()
+        rotate2 = rotorUI[2].rotor.notch_over_pawl() or rotorUI[1].rotor.notch_over_pawl()
+        rotate3 = rotorUI[1].rotor.notch_over_pawl()
+        if rotate2:
+            rotorUI[1].shiftDown()
+        if rotate3:
+            rotorUI[0].shiftDown()
+
+        
+        OUTPUT_CHR = enigma.process_text(text[i])
+        tmp_output = tmp_output + OUTPUT_CHR
+    #simulate the last character's manipulation
+    for n in range(0, 26):
+            if KeyB_UI.keyButtons[n].character == text[len(text)-1]:
+                TIMER = 0
+                LAMPPOSITION = [0,0]
+                POSITIONKEY = KeyB_UI.keyButtons[n].characterCor
+    #for n in range(0, 26):          
+        #if LamB_UI.lampButtons[n].character == OUTPUT_CHR:
+                            #LAMPPOSITION = LamB_UI.lampButtons[n].characterCor 
+
+    CLICKED_CHR = ''
+    displayObject.set_text(enigma.get_display()[0]+" "+enigma.get_display()[1]+" "+enigma.get_display()[2])
+    outObject.set_text(tmp_output_texts + tmp_output)
+    #print("Full text "+text)
+    #if PRESSED_COUNTER == 0:
+        #if len(text) == 1:
+            #PRESSED_COUNTER = 1
+        #else:
+            #PRESSED_COUNTER = PRESSED_COUNTER +len(text)-1
+            #START_INDEX = END_INDEX + 1
+            #END_INDEX = len(text) - 1
+    #else:
+        #PRESSED_COUNTER = PRESSED_COUNTER +1
+        #START_INDEX = END_INDEX + 1
+        #END_INDEX = len(text) - 1
+        
+    #tmp_output_texts = outObject.get_text()
+    #tmp_output = ''
+    #print(text[START_INDEX:END_INDEX+1])
+    #for i in range(START_INDEX, END_INDEX+1 ):
+        #CLICKED_CHR = text[i]
+        #rotorUI[2].shiftDown()
+        #rotate2 = rotorUI[2].rotor.notch_over_pawl() or rotorUI[1].rotor.notch_over_pawl()
+        #rotate3 = rotorUI[1].rotor.notch_over_pawl()
+        #if rotate2:
+            #rotorUI[1].shiftDown()
+        #if rotate3:
+            #rotorUI[0].shiftDown()
+
+        
+        #OUTPUT_CHR = enigma.process_text(text[i])
+        #tmp_output = tmp_output + OUTPUT_CHR
+    
+    #CLICKED_CHR = ''
+    #displayObject.set_text(enigma.get_display()[0]+" "+enigma.get_display()[1]+" "+enigma.get_display()[2])
+    #outObject.set_text(tmp_output_texts + tmp_output)
+    #tmp = inputObject.get_text()
+    #inputObject.set_text(tmp+CLICKED_CHR)
+def output_string(out_str):
+    
+    print("Output String")
+# Handler to implment click 
+def mouse_handler(point):
+    global RT_ARROWS
+    global OUTPUT_CHR, CIPHERS, DECIPHERS
+    global POSITION , POSITIONKEY, TIMER
+    global CLICKED_CHR, PRESSED_COUNTER, LAMPPOSITION, RING_SETTING_POSITION, RESET_POSITION
+    global START_INDEX, END_INDEX
+    global Pub,PubUI,rotor,reflector,enigma,rotorUI,reflectorUI
+    global RING_SETTING, PLUG_SETTING
+    global RING_INDEX, RING_LIST, RINGS
+    global REFLECTOR_SETTING, REF_LIST, REF_INDEX
+    global SWITCH_CLCK
+    POSITION[0] = point[0]
+    POSITION[1] = point[1]
+    RESET_POSITION[0] = point[0]
+    RESET_POSITION[1] = point[1]
+    KeyB_UI = KeyBoardUI()
+    
+    for n in range(0,3):
+        for m in range(0,2):
+            ARROWAREA = PinButton(0,'a',
+            [[RT_ARROWS[n][m][2][0],RT_ARROWS[n][m][2][1]-12*(1-m)],
+            [RT_ARROWS[n][m][1][0],RT_ARROWS[n][m][1][1]-12*(1-m)],
+            [RT_ARROWS[n][m][1][0],RT_ARROWS[n][m][1][1]+12*m],
+            [RT_ARROWS[n][m][2][0],RT_ARROWS[n][m][2][1]+12*m]])
+            #print(ARROWAREA.coordinates)
+            if ARROWAREA.isArea(POSITION):
+                #reset the pressed counter
+                PRESSED_COUNTER = 0
+                LAMPPOSITION = [0,0]
+                POSITIONKEY = [0,0]
+                CIPHERS = ''
+		DECIPHERS = ''
+                display = [enigma.get_display()[0],enigma.get_display()[1],enigma.get_display()[2]]
+                rotorUI[n].arrowColor[m] = "#1F99FE"
+                if n == 0:
+                    if m == 0:
+                        rotorUI[n].shiftUp()
+                        change = (ord(display[0])-65-1)%26
+                        enigma.set_display(chr(change+65)+display[1]+display[2])
+                    else:
+                        rotorUI[n].shiftDown()
+                        change = (ord(display[0])-65+1)%26
+                        enigma.set_display(chr(change+65)+display[1]+display[2])
+                elif n == 1:
+                    if m == 0:
+                        rotorUI[n].shiftUp()
+                        change = (ord(display[1])-65-1)%26
+                        enigma.set_display(display[0]+str(chr(change+65))+display[2])
+                    else:
+                        rotorUI[n].shiftDown()
+                        change = (ord(display[1])-65+1)%26
+                        enigma.set_display(display[0]+str(chr(change+65))+display[2])
+                else:
+                    if m == 0:
+                        rotorUI[n].shiftUp()
+                        change = (ord(display[2])-65-1)%26
+                        enigma.set_display(display[0]+display[1]+str(chr(change+65)))
+                    else:
+                        rotorUI[n].shiftDown()
+                        change = (ord(display[2])-65+1)%26
+                        enigma.set_display(display[0]+display[1]+str(chr(change+65)))
+                #displayObject.set_text(enigma.get_display()[0]+" "+enigma.get_display()[1]+" "+enigma.get_display()[2])
+                
+            else:
+                rotorUI[n].arrowColor[m] = "#2D2DCF"
+    for n in range(0,26):
+        if KeyB_UI.keyButtons[n].isArea(POSITION):
+            TIMER = 0
+            LAMPPOSITION = [0,0]
+            POSITIONKEY[0] = point[0]
+            POSITIONKEY[1] = point[1]
+            rotorUI[2].shiftDown()
+            rotate2 = rotor[2].notch_over_pawl() or rotor[1].notch_over_pawl()
+            rotate3 = rotor[1].notch_over_pawl()
+            if rotate2:
+                rotorUI[1].shiftDown()
+            if rotate3:
+                rotorUI[0].shiftDown()
+            
+            #tmp_input_texts = inputObject.get_text()
+            if PRESSED_COUNTER == 0 : #tmp_input_texts == '' 
+                #print("case 1")
+                PRESSED_COUNTER = PRESSED_COUNTER + 1
+                CLICKED_CHR = KeyB_UI.keyButtons[n].character
+                CIPHERS = CIPHERS+CLICKED_CHR
+                #inputObject.set_text(tmp_input_texts+CLICKED_CHR)
+            else:
+                #print("case 2")
+                PRESSED_COUNTER = PRESSED_COUNTER + 1
+                #START_INDEX = END_INDEX + 1
+                CLICKED_CHR = KeyB_UI.keyButtons[n].character
+                CIPHERS = CIPHERS+CLICKED_CHR
+                #inputObject.set_text(tmp_input_texts + CLICKED_CHR)
+                #tmp_input_texts = inputObject.get_text()
+                #END_INDEX = len(tmp_input_texts) - 1
+                
+            #print(CLICKED_CHR+" is Clicked ")
+            #print(ord(CLICKED_CHR))
+            OUTPUT_CHR = enigma.process_text(CLICKED_CHR)
+            DECIPHERS = DECIPHERS+OUTPUT_CHR
+            #displayObject.set_text(enigma.get_display()[0]+" "+enigma.get_display()[1]+" "+enigma.get_display()[2])
+            #tmp2 = outObject.get_text()
+            #outObject.set_text(tmp2 + OUTPUT_CHR)
+        else:
+            continue
+            
+    if isSquareArea(PLUGBOARD_AREA,point):
+        print("PLUGBOARD_AREA")
+        global SELECTED_R, SELECTED_L, PLUG_SETTING
+        global Pub,PubUI
+        global PLUG_RIGHT_CHR, PLUG_LEFT_CHR
+        global plugSettingObject
+        global DICT_PAIRED
+        PLUG_POINT = [point[0],point[1]]
+        
+        #PubUI = PlugboardUI(Pub)
+        for n in range(0,26):
+            if PubUI.rightPinButtons[n].isArea(PLUG_POINT):
+                print(str(n)+" Inside Plugboard and inside plug pins")
+                SELECTED_R = True
+                PLUG_RIGHT_CHR = PubUI.rightPinButtons[n].getCharacter()
+                print("R CHAR: "+PLUG_RIGHT_CHR)
+                if PLUG_RIGHT_CHR in DICT_PAIRED:
+                    to_be_replaced = PLUG_RIGHT_CHR+DICT_PAIRED[PLUG_RIGHT_CHR]+' '
+                    to_be_replaced = str(to_be_replaced)
+
+                    PLUG_SETTING=PLUG_SETTING.replace(to_be_replaced,'')
+                    to_be_replaced = DICT_PAIRED[PLUG_RIGHT_CHR]+PLUG_RIGHT_CHR+' '
+                    to_be_replaced = str(to_be_replaced)
+
+                    PLUG_SETTING=PLUG_SETTING.replace(to_be_replaced,'')
+                    del DICT_PAIRED[DICT_PAIRED[PLUG_RIGHT_CHR]]
+                    del DICT_PAIRED[PLUG_RIGHT_CHR]
+                    instantiateEnigma()
+                else:
+                    print("Not in the dict")
+            else:
+                print(str(n)+" Inside Plugboard but out of plug pins")
+                
+        for n in range(0,26):
+            if PubUI.leftPinButtons[n].isArea(PLUG_POINT):
+                SELECTED_L = True
+                PLUG_LEFT_CHR = PubUI.leftPinButtons[n].getCharacter()
+                print("L CHAR: "+PLUG_LEFT_CHR)
+                if PLUG_LEFT_CHR in DICT_PAIRED:
+
+                    to_be_replaced = PLUG_LEFT_CHR+DICT_PAIRED[PLUG_LEFT_CHR]+' '
+                    to_be_replaced = str(to_be_replaced)
+
+                    PLUG_SETTING=PLUG_SETTING.replace(to_be_replaced,'')
+                    to_be_replaced = DICT_PAIRED[PLUG_LEFT_CHR]+PLUG_LEFT_CHR+' '
+                    to_be_replaced = str(to_be_replaced)
+                    
+                    PLUG_SETTING=PLUG_SETTING.replace(to_be_replaced,'')
+                    del DICT_PAIRED[DICT_PAIRED[PLUG_LEFT_CHR]]
+                    del DICT_PAIRED[PLUG_LEFT_CHR]
+                    instantiateEnigma()
+                    
+                    
+        if SELECTED_R and SELECTED_L and len(DICT_PAIRED)<= 20:
+            SELECTED_R = False
+            SELECTED_L = False
+            print("R_L_TRUE")
+            print("*******")
+            print(DICT_PAIRED)
+            TMP_SETTING = PLUG_SETTING
+            PLUG_SETTING = PLUG_SETTING.lstrip(' ')
+            #instantiateEnigma()
+            
+            if (PLUG_LEFT_CHR != PLUG_RIGHT_CHR) and len(DICT_PAIRED) <20:
+                print("A#B")
+                DICT_PAIRED[PLUG_LEFT_CHR] = PLUG_RIGHT_CHR
+                DICT_PAIRED[PLUG_RIGHT_CHR] = PLUG_LEFT_CHR
+                print(len(DICT_PAIRED))
+                PLUG_SETTING = PLUG_SETTING+ str(PLUG_RIGHT_CHR)+str(PLUG_LEFT_CHR)+" "
+                instantiateEnigma()
+        
+    #implment ring setting buttons
+    #clicking ring setting buttons
+    for ring in range(0, 3):
+        for button in range(0, 2):
+            
+            if isSquareArea(RING_SETTING_AREA[ring][button],point):
+                RING_SETTING_POSITION[0] = point[0]
+                RING_SETTING_POSITION[1] = point[1]
+                #the button is clicked
+                if button == 0:
+                    #left button clicked
+                    RING_SETTING[ring] = (rotor[ring].ring_setting - 1)%26
+                    instantiateEnigma()
+                else:
+                    #right button clicked
+                    RING_SETTING[ring] = (rotor[ring].ring_setting + 1)%26
+                    instantiateEnigma()
+   
+    #implment ring order setting buttons
+    #clicking ring order setting buttons
+    for ring in range(0, 3):
+        for button in range(0, 2):
+            #the button is clicked
+            if isSquareArea(RING_ORDER_AREA[ring][button],point):
+                RING_SETTING_POSITION[0] = point[0]
+                RING_SETTING_POSITION[1] = point[1]
+                if button == 0:
+                    #left clicked
+                    #RING_LIST = ['I','II','III','IV','V','VI','VII','VIII']
+                    #RING_INDEX = [0,1,2] # III II I
+                    RING_INDEX[ring] = (RING_INDEX[ring] -1)%8
+                    #RING[0] = RING_LIST[RING_INDEX[0]]
+                    RINGS= [RING_LIST[RING_INDEX[0]], RING_LIST[RING_INDEX[1]], RING_LIST[RING_INDEX[2]]]
+                    instantiateEnigma()
+                else:
+                    #lright clicked
+                    #RING_LIST = ['I','II','III','IV','V','VI','VII','VIII']
+                    #RING_INDEX = [0,1,2] # III II I
+                    RING_INDEX[ring] = (RING_INDEX[ring] +1)%8
+                    #RING[0] = RING_LIST[RING_INDEX[0]]
+                    RINGS= [RING_LIST[RING_INDEX[0]], RING_LIST[RING_INDEX[1]], RING_LIST[RING_INDEX[2]]]
+                    instantiateEnigma()
+  
+    #implment reflector setting buttons
+    #clicking reflector setting buttons
+    for button in range(0, 2):
+        #the button is clicked
+        if isSquareArea(REF_SET_AREA[button],point):
+            RING_SETTING_POSITION[0] = point[0]
+            RING_SETTING_POSITION[1] = point[1]
+            if button == 0:
+                REF_INDEX = (REF_INDEX - 1)%2
+                REFLECTOR_SETTING = REF_LIST[REF_INDEX]
+                instantiateEnigma()
+            else:
+                REF_INDEX = (REF_INDEX + 1)%2
+                REFLECTOR_SETTING = REF_LIST[REF_INDEX]
+                instantiateEnigma()
+    #implment reset button
+    if isSquareArea(RESET_BTN_AREA,point):
+        SWITCH_CLCK = SWITCH_CLCK+1
+        reset_enigma()
+#mouse drag handler
+def mousedrag_handler(point):
+    global RING_SETTING, PLUG_SETTING
+    
+
+#defines all classes
+# Copyright (C) 2012 by Brian Neal.
+# This file is part of Py-Enigma, the Enigma Machine simulation.
+# Py-Enigma is released under the MIT License (see License.txt).
+
+"""The rotors package simulates the Enigma rotors & reflectors."""
+
+class RotorError():
+    def __init__(Exception):
+        print(Exception)
+class Rotor():
+    def __init__(self, model_name, wiring, ring_setting=0, stepping=None):
+        #print("Rotor is innitialized!!")
+        #ring setting 0 --> 25
+        self.name = model_name
+        self.wiring_str = wiring.upper()
+        self.ring_setting = ring_setting
+        self.pos = 0
+        self.rotations = 0
+
+        # check wiring length
+        if len(self.wiring_str) != 26:
+            raise RotorError("invalid wiring length")
+
+        # check wiring format; must contain A-Z
+        for c in self.wiring_str:
+            if c not in ALPHA_LABELS:
+                print("invalid wiring:")
+                
+        # check wiring format; ensure every letter appears exactly once
+        #print(WIRING_FREQ_SET)
+        input_set = set(collections.Counter(self.wiring_str).items())
+        #print("Input Set:")
+        #print(input_set)
+        if input_set != WIRING_FREQ_SET:
+            raise RotorError("invalid wiring frequency")
+
+        if not isinstance(ring_setting, int) or not (0 <= ring_setting < 26):
+            raise RotorError("invalid ring_setting")
+
+        # Create two lists to describe the internal wiring. Two lists are used
+        # to do fast lookup from both entry (from the right) and exit (from the
+        # left). 
+        self.entry_map = [ord(pin) - ord('A') for pin in self.wiring_str]
+        #print("Model Name: "+self.name)
+        #print("Entry_map:@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        #print(self.entry_map)
+        self.exit_map = [0] * 26
+        for i, v in enumerate(self.entry_map):
+            self.exit_map[v] = i
+
+        # build a map of display values to positions
+        self.display_map = {}
+        for n in range(26):
+            self.display_map[chr(ord('A') + n)] = (n - self.ring_setting) % 26
+        #print("Display map:#########################")
+        #print(self.display_map)
+        # build a reverse map of position mapped to display values
+        #self.pos_map = {v : k for k, v in self.display_map.items()}
+        self.pos_map = dict ( (v,k) for k, v in self.display_map.items() )
+        #print("Pos_map:************************")
+        #print(self.pos_map)
+        #dictb = dict ( (v,k) for k, v in self.display_map.items() )
+
+        # build step set; this is a set of positions where our notches are in
+        # place to allow the pawls to move
+        self.step_set = set()
+        if stepping is not None:
+            for pos in stepping:
+                if pos in self.display_map:
+                    self.step_set.add(pos)
+                else:
+                    print("stepping")
+
+        # initialize our position and display value:
+        self.set_display('A')
+        
+    def set_display(self, val):
+        #print("setting Display value windows....")
+        #print(self.display_map)
+        s = val.upper()
+        if not ( s in self.display_map):
+            print("bad display value")
+            
+        self.pos = self.display_map[s]
+        self.display_val = s
+        #print("Display has been set")
+        self.rotations = 0
+
+    def get_display(self):
+        #"""Returns what is currently being displayed in the operator window."""
+        return self.display_val
+
+    def signal_in(self, n):
+        #"""Simulate a signal entering the rotor from the right at a given pin
+        #position n.
+
+        #n must be an integer between 0 and 25.
+
+        #Returns the contact number of the output signal (0-25).
+
+        #"""
+        # determine what pin we have at that position due to rotation
+        #print("n is:....")
+        #print(n)
+        #print("Self Pos:")
+        #print(self.pos)
+        pin = (n + self.pos) % 26
+        #print("Pin is: "+str(pin))
+
+        # run it through the internal wiring
+        #print("contact = Entry_map[pin]")
+        contact = self.entry_map[pin]
+        #print("Contact is: "+str(contact))
+        #contact is not character, it is position
+        #print(self.pos_map[pin]+" : look up to "+self.pos_map[contact])
+
+
+        # turn back into a position due to rotation
+        #print("Self p: "+str(self.pos))
+        #print("offset "+str((contact - self.pos)%26))
+        return (contact - self.pos) % 26
+
+    def signal_out(self, n):
+        #"""Simulate a signal entering the rotor from the left at a given
+        #contact position n.
+
+        #n must be an integer between 0 and 25.
+
+        #Returns the pin number of the output signal (0-25).
+
+        #"""
+        #print("n is......")
+        #print(n)
+        #print("Self p:"+str(self.pos))
+        # determine what contact we have at that position due to rotation
+        contact = (n + self.pos) % 26
+        #print("contact is: "+str(contact))
+        # run it through the internal wiring
+        #print("pin = exit_map[contact]")
+        pin = self.exit_map[contact]
+        #print("Pin is: "+str(pin))
+        #print(self.pos_map[contact]+" : look up to "+self.pos_map[pin])
+        # turn back into a position due to rotation
+        return (pin - self.pos) % 26
+
+    def notch_over_pawl(self):
+        #"""Return True if this rotor has a notch in the stepping position and
+        #False otherwise.
+
+        #"""
+        return self.display_val in self.step_set
+
+    def rotate(self):
+        #"""Rotate the rotor forward due to mechanical stepping action."""
+
+        self.pos = (self.pos + 1) % 26
+        self.display_val = self.pos_map[self.pos]
+        self.rotations += 1
+        
+# This data is taken from Dirk Rijmenants very informative and useful Enigma
+# website: "Techical Details of the Engigma Machine"
+# http://users.telenet.be/d.rijmenants/en/enigmatech.htm
+#
+# Rotors I-V were used by the Heer, Luftwaffe, and Kriegsmarine. The
+# Kriegsmarine added rotors VI-VIII to the M3 model, and added Beta & Gamma to
+# the M4 model (used with thin reflectors only). Note that Beta & Gamma rotors
+# did not rotate.
+#
+# The Heer, Luftwaffe, & Kriegsmarine M3 machines used reflectors B & C,
+# while the Kriegsmarine M4 used thin reflectors B & C.
+#
+
+ROTORS = {
+    'I': {
+        'wiring': 'EKMFLGDQVZNTOWYHXUSPAIBRCJ',
+        'stepping': 'Q',
+    },
+    'II': {
+        'wiring': 'AJDKSIRUXBLHWTMCQGZNPYFVOE',
+        'stepping': 'E',
+    },
+    'III': {
+        'wiring': 'BDFHJLCPRTXVZNYEIWGAKMUSQO',
+        'stepping': 'V',
+    },
+    'IV': {
+        'wiring': 'ESOVPZJAYQUIRHXLNFTGKDCMWB',
+        'stepping': 'J',
+    },
+    'V': {
+        'wiring': 'VZBRGITYUPSDNHLXAWMJQOFECK',
+        'stepping': 'Z',
+    },
+    'VI': {
+        'wiring': 'JPGVOUMFYQBENHZRDKASXLICTW',
+        'stepping': 'ZM',
+    },
+    'VII': {
+        'wiring': 'NZJHGRCXMYSWBOUFAIVLPEKQDT',
+        'stepping': 'ZM',
+    },
+    'VIII': {
+        'wiring': 'FKQHTLXOCBJSPDZRAMEWNIUYGV',
+        'stepping': 'ZM',
+    },
+    'Beta': {
+        'wiring': 'LEYJVCNIXWPBQMDRTAKZGFUHOS',
+        'stepping': None,
+    },
+    'Gamma': {
+        'wiring': 'FSOKANUERHMBTIYCWLQPZXVGJD',
+        'stepping': None,
+    },
+}
+
+REFLECTORS = {
+    'B': 'YRUHQSLDPXNGOKMIEBFZCWVJAT',
+    'C': 'FVPJIAOYEDRZXWGCTKUQSBNMHL',
+    'B-Thin': 'ENKQAUYWJICOPBLMDXZVFTHRGS',
+    'C-Thin': 'RDOBJNTKVEHMLFCWZAXGYIPSUQ',
+}
+def create_rotor(model, ring_setting=0):
+    #"""Factory function to create and return a rotor of the given model name."""
+
+    if model in ROTORS:
+        data = ROTORS[model]
+        return Rotor(model, data['wiring'], ring_setting, data['stepping'])
+
+    print("Unknown rotor type: %s",model)
+
+
+def create_reflector(model):
+    #"""Factory function to create and return a reflector of the given model
+    #name.
+    
+    #"""
+    if model in REFLECTORS:
+        return Rotor(model, wiring=REFLECTORS[model])
+
+    print("Unknown reflector type: %s",model)
+#Keyfiles
+def get_daily_settings(fp, day=None):
+    #"""Read and parse a key file for daily key settings. 
+
+    #fp - a file-like object 
+
+    #day - specifies the day number to look for in the file (1-31). If day is
+    #None, the day number from today is used.
+    
+    #Returns a dictionary of keyword arguments for EnigmaMachine.from_key_sheet.
+
+    #"""
+    if day is None:
+        day = datetime.date.today().day
+
+    for n, line in enumerate(fp):
+        line = line.strip()
+        if line == '' or line[0] == '#':
+            continue
+
+        cols = line.split()
+        if len(cols) not in [18, 20]:
+            print("invalid column count on line %d",n)
+        
+        rotor_count = 3 if len(cols) == 18 else 4
+
+        try:
+            day_num = int(cols[0])
+        except ValueError:
+            print("invalid day on line %d",n)
+
+        if day_num != day:
+            continue
+
+        settings = {}
+        if rotor_count == 3:
+            settings['rotors'] = cols[1:4]
+            settings['ring_settings'] = ' '.join(cols[4:7])
+        else:
+            settings['rotors'] = cols[1:5]
+            settings['ring_settings'] = ' '.join(cols[5:9])
+
+        settings['plugboard_settings'] = ' '.join(cols[-11:-1])
+        settings['reflector'] = cols[-1]
+        return settings
+
+    else:
+        print('no entry for day %d found',day)
+
+        return settings
+#Plugboard
+import collections
+#from itertools import chain
+#import string
+
+
+# On Heer & Luftwaffe (?) models, the plugs are labeled with upper case letters
+HEER_LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+# The number of plugboard cables supplied with a machine:
+MAX_PAIRS = 10
+
+class Plugboard:
+    #"""The plugboard allows the operator to swap letters before and after the 
+    #entry wheel. This is accomplished by connecting cables between pairs of
+    #plugs that are marked with letters (Heer & Luftwaffe models) or numbers
+    #(Kriegsmarine). Ten cables were issued with each machine; thus up to 10 of
+    #these swappings could be used as part of a machine setup.
+
+    #Each cable swaps both the input and output signals. Thus if A is connected
+    #to B, A crosses to B in the keyboard to entry wheel direction and also in
+    #the reverse entry wheel to lamp direction.
+
+    #"""
+    def __init__(self, settings =None):
+        #"""Configure the plugboard according to a list or tuple of integer
+        #pairs, or None.
+
+        #A value of None or an empty list/tuple indicates no plugboard
+        #connections are to be used (i.e. a straight mapping).
+
+        #Otherwise wiring_pairs must be an iterable of integer pairs, where each
+        #integer is between 0-25, inclusive. At most 10 such pairs can be
+        #specified. Each value represents an input/output path through the
+        #plugboard. It is invalid to specify the same path more than once in the
+        #list.
+
+        #If an invalid wiring_pairs parameter is given, a PlugboardError is
+        #raised.
+
+        #"""
+        if not settings:
+            return cls(None)
+
+        wiring_pairs = []
+        
+        # detect which syntax is being used
+        if settings.find('/') != -1:
+            # Kriegsmarine syntax
+            pairs = settings.split()
+            for p in pairs:
+                try:
+                    m, n = p.split('/')
+                    m, n = int(m), int(n)
+                except ValueError:
+                    print('invalid pair: %s',p)
+
+                wiring_pairs.append((m - 1, n - 1))
+        else:
+            # Heer/Luftwaffe syntax
+            pairs = settings.upper().split()
+
+            for p in pairs:
+                if len(p) != 2:
+                    raise PlugboardError('invalid pair: %s' % p)
+
+                m = p[0]
+                n = p[1]
+                if m not in HEER_LABELS or n not in HEER_LABELS:
+                    print('invalid pair: %s' % p)
+
+                wiring_pairs.append((ord(m) - ord('A'), ord(n) - ord('A')))
+                
+                      
+        # construct wiring mapping table with default 1-1 mappings
+        self.wiring_map = list(range(26))
+
+        # use settings if provided
+        if not wiring_pairs:
+            return
+
+        if len(wiring_pairs) > MAX_PAIRS:
+            raise PlugboardError('Please specify %d or less pairs' % MAX_PAIRS)
+
+        # ensure a path occurs at most once in the list
+        #print("Wiring format:")
+        #print(wiring_pairs)
+        #implement path checking
+        self.alphabet = [0]*26
+        #print(Alphabet)
+        for element in wiring_pairs:
+            for tp in element:
+                self.alphabet[tp] = self.alphabet[tp] +1
+        #print("After the loop:")
+        #print(Alphabet)
+        #counter = collections.Counter(chain.from_iterable(wiring_pairs))
+        #path, count = counter.most_common(1)[0]
+        
+        if not(self.isSinglePath(self.alphabet)):
+            print('duplicate connection:')
+
+        # make the connections
+        for pair in wiring_pairs:
+            m = pair[0]
+            n = pair[1]
+            if not (0 <= m < 26) or not (0 <= n < 26):
+                raise PlugboardError('invalid connection: %s' % str(pair))
+
+            self.wiring_map[m] = n
+            self.wiring_map[n] = m
+
+
+    def signal(self, n):
+        #"""Simulate a signal entering the plugboard on wire n, where n must be
+        #an integer between 0 and 25.
+
+        #Returns the wire number of the output signal (0-25).
+
+        #Note that since the plugboard always crosses pairs of wires, it doesn't
+        #matter what direction (keyboard -> entry wheel or vice versa) the signal
+        #is coming from.
+
+        #"""
+        #print("Entering Plugboard")
+        #print("n is.....")
+        #print(n)
+        #print("Wirinng Map:"+str(chr(ord('A')+n))+" is:"+str(chr(ord('A')+self.wiring_map[n]))+"("+str(self.wiring_map[n])+")")
+        return self.wiring_map[n]
+    def isSinglePath(self, alphabets):
+        val = True
+        for e in alphabets:
+            if e >= 2:
+                val = False
+                break
+        return val
+#draw lamp label
+x = 5 + 6*TGLB_WIDTH + 5*X_GAP + ROTOR_BOARD_GAP
+y = 5
+#draw lamp board Panel
+y = (OY + 2*TGLB_HEIGHT+4*Y_GAP) + TGLB_HEIGHT + Y_GAP
+#draw 26 keys
+X_K2K = 5
+Y_K2K = 25
+MARGIN = 5
+tmpX = x
+tmpY = y
+x = x+MARGIN+KRADIUS
+y = y+MARGIN+KRADIUS + 10
+#x2 and y2 used for second row
+x2 = tmpX+MARGIN+2*KRADIUS+X_K2K/2
+y2 = tmpY+MARGIN+3*KRADIUS+Y_K2K
+#x3 and y3 used for third row
+x3 = x
+y3 = y2+2*KRADIUS+Y_K2K
+#draw first row
+LAMPBOARD_ROW1 = list(range(9))
+for n in range(0, len(LAMPBOARD_ROW1)):
+    LAMPBOARD_ROW1[n] = [x , y]
+    x = x+6+2*KRADIUS
+
+LAMPBOARD_ROW2 = list(range(8))
+for n in range(0, len(LAMPBOARD_ROW2)):
+    LAMPBOARD_ROW2[n] = [x2 , y2]
+    x2 = x2+6+2*KRADIUS
+
+LAMPBOARD_ROW3 = list(range(9))
+for n in range(0, len(LAMPBOARD_ROW3)):
+    LAMPBOARD_ROW3[n] = [x3 , y3]
+    x3 = x3+6+2*KRADIUS
+###################################################################################3
+#draw 26 keys
+#draw Keyboard
+x = tmpX
+y = tmpY+ 2*Y_GAP+BOARD_H
+#Key Board Panel
+y = y + TGLB_HEIGHT	+ Y_GAP
+#draw 26 keys
+X_K2K = 5
+Y_K2K = 25
+MARGIN = 5
+#additionally plus some value to lower the characters position
+y = y + 10
+tmpX = x
+tmpY = y
+x = x+MARGIN+KRADIUS
+y = y+MARGIN+KRADIUS + 10
+
+#x2 and y2 used for second row
+x2 = tmpX+MARGIN+2*KRADIUS+X_K2K/2
+y2 = tmpY+MARGIN+3*KRADIUS+Y_K2K
+#x3 and y3 used for third row
+x3 = x
+y3 = y2+2*KRADIUS+Y_K2K
+
+#draw first row
+KEYBOARD_ROW1 = list(range(9))
+for n in range(0, len(KEYBOARD_ROW1)):
+    KEYBOARD_ROW1[n] = [x , y]
+    x = x+6+2*KRADIUS
+
+KEYBOARD_ROW2 = list(range(8))
+for n in range(0, len(KEYBOARD_ROW2)):
+    KEYBOARD_ROW2[n] = [x2 , y2]
+    x2 = x2+6+2*KRADIUS
+
+KEYBOARD_ROW3 = list(range(9))
+for n in range(0, len(KEYBOARD_ROW3)):
+    KEYBOARD_ROW3[n] = [x3 , y3]
+    x3 = x3+6+2*KRADIUS
+class lampButton():
+    def __init__(self,character,cor):
+        self.character = character
+        self.coordinates = cor
+        self.background = '#333F50'
+        self.characterCor = [cor[0]-6, cor[1]+4]
+        self.bottomCor = [[cor[0],cor[1]+KRADIUS],
+                          [cor[0],cor[1]+KRADIUS + KRADIUS]]
+        
+    def drawButton(self, canvas):
+        if (self.isArea(LAMPPOSITION)):
+            canvas.draw_circle([self.coordinates[0], self.coordinates[1]], KRADIUS, 2, "#FFFFFF","Yellow")
+            canvas.draw_text(self.character, self.characterCor ,14,'Black')
+        else:
+            canvas.draw_circle([self.coordinates[0], self.coordinates[1]], KRADIUS, 2, "#767171","#333F50")
+            canvas.draw_text(self.character, self.characterCor ,14,'White')
+    def isArea(self, point):
+        return math.sqrt((point[0] - self.coordinates[0])**2 + (point[1] - self.coordinates[1])**2 )<= KRADIUS
+class keyButton():
+    def __init__(self,character,cor):
+        self.character = character
+        self.coordinates = cor
+        self.background = '#333F50'
+        self.characterCor = [cor[0]-6, cor[1]+4]
+        self.bottomCor = [[cor[0],cor[1]+KRADIUS],
+                          [cor[0],cor[1]+KRADIUS + KRADIUS]]
+        
+    def drawButton(self, canvas):
+        if (self.isArea(POSITIONKEY)):
+            canvas.draw_circle([self.coordinates[0], self.coordinates[1]], KRADIUS, 2, "#FFF","Blue")
+            canvas.draw_text(self.character, self.characterCor ,14,'White')
+        else:
+            canvas.draw_circle([self.coordinates[0], self.coordinates[1]], KRADIUS, 2, "#FFF","#333F50")
+            canvas.draw_text(self.character, self.characterCor ,14,'White')
+    def isArea(self, point):
+        return math.sqrt((point[0] - self.coordinates[0])**2 + (point[1] - self.coordinates[1])**2 )<= KRADIUS
+class KeyBoardUI():
+    def __init__(self):
+        #first row
+        self.keyButtons = list(range(26))
+        self.keyButtons[0] = keyButton('Q',KEYBOARD_ROW1[0])
+        self.keyButtons[1] = keyButton('W',KEYBOARD_ROW1[1])
+        self.keyButtons[2] = keyButton('E',KEYBOARD_ROW1[2])
+        self.keyButtons[3] = keyButton('R',KEYBOARD_ROW1[3])
+        self.keyButtons[4] = keyButton('T',KEYBOARD_ROW1[4])
+        self.keyButtons[5] = keyButton('Z',KEYBOARD_ROW1[5])
+        self.keyButtons[6] = keyButton('U',KEYBOARD_ROW1[6])
+        self.keyButtons[7] = keyButton('I',KEYBOARD_ROW1[7])
+        self.keyButtons[8] = keyButton('O',KEYBOARD_ROW1[8])
+        #second row
+        self.keyButtons[9] = keyButton('A',KEYBOARD_ROW2[0])
+        self.keyButtons[10] = keyButton('S',KEYBOARD_ROW2[1])
+        self.keyButtons[11] = keyButton('D',KEYBOARD_ROW2[2])
+        self.keyButtons[12] = keyButton('F',KEYBOARD_ROW2[3])
+        self.keyButtons[13] = keyButton('G',KEYBOARD_ROW2[4])
+        self.keyButtons[14] = keyButton('H',KEYBOARD_ROW2[5])
+        self.keyButtons[15] = keyButton('J',KEYBOARD_ROW2[6])
+        self.keyButtons[16] = keyButton('K',KEYBOARD_ROW2[7])
+        #third row
+        self.keyButtons[17] = keyButton('P',KEYBOARD_ROW3[0])
+        self.keyButtons[18] = keyButton('Y',KEYBOARD_ROW3[1])
+        self.keyButtons[19] = keyButton('X',KEYBOARD_ROW3[2])
+        self.keyButtons[20] = keyButton('C',KEYBOARD_ROW3[3])
+        self.keyButtons[21] = keyButton('V',KEYBOARD_ROW3[4])
+        self.keyButtons[22] = keyButton('B',KEYBOARD_ROW3[5])
+        self.keyButtons[23] = keyButton('N',KEYBOARD_ROW3[6])
+        self.keyButtons[24] = keyButton('M',KEYBOARD_ROW3[7])
+        self.keyButtons[25] = keyButton('L',KEYBOARD_ROW3[8])
+    def drawKeyboardUI(self, canvas):
+        for n in range(0,26):
+            self.keyButtons[n].drawButton(canvas)
+
+class LampBoardUI():
+    def __init__(self):
+        #first row
+        self.lampButtons = list(range(26))
+        self.lampButtons[0] = lampButton('Q',LAMPBOARD_ROW1[0])
+        self.lampButtons[1] = lampButton('W',LAMPBOARD_ROW1[1])
+        self.lampButtons[2] = lampButton('E',LAMPBOARD_ROW1[2])
+        self.lampButtons[3] = lampButton('R',LAMPBOARD_ROW1[3])
+        self.lampButtons[4] = lampButton('T',LAMPBOARD_ROW1[4])
+        self.lampButtons[5] = lampButton('Z',LAMPBOARD_ROW1[5])
+        self.lampButtons[6] = lampButton('U',LAMPBOARD_ROW1[6])
+        self.lampButtons[7] = lampButton('I',LAMPBOARD_ROW1[7])
+        self.lampButtons[8] = lampButton('O',LAMPBOARD_ROW1[8])
+        #second row
+        self.lampButtons[9] = lampButton('A',LAMPBOARD_ROW2[0])
+        self.lampButtons[10] = lampButton('S',LAMPBOARD_ROW2[1])
+        self.lampButtons[11] = lampButton('D',LAMPBOARD_ROW2[2])
+        self.lampButtons[12] = lampButton('F',LAMPBOARD_ROW2[3])
+        self.lampButtons[13] = lampButton('G',LAMPBOARD_ROW2[4])
+        self.lampButtons[14] = lampButton('H',LAMPBOARD_ROW2[5])
+        self.lampButtons[15] = lampButton('J',LAMPBOARD_ROW2[6])
+        self.lampButtons[16] = lampButton('K',LAMPBOARD_ROW2[7])
+        #third row
+        self.lampButtons[17] = lampButton('P',LAMPBOARD_ROW3[0])
+        self.lampButtons[18] = lampButton('Y',LAMPBOARD_ROW3[1])
+        self.lampButtons[19] = lampButton('X',LAMPBOARD_ROW3[2])
+        self.lampButtons[20] = lampButton('C',LAMPBOARD_ROW3[3])
+        self.lampButtons[21] = lampButton('V',LAMPBOARD_ROW3[4])
+        self.lampButtons[22] = lampButton('B',LAMPBOARD_ROW3[5])
+        self.lampButtons[23] = lampButton('N',LAMPBOARD_ROW3[6])
+        self.lampButtons[24] = lampButton('M',LAMPBOARD_ROW3[7])
+        self.lampButtons[25] = lampButton('L',LAMPBOARD_ROW3[8])
+    def drawLampboardUI(self, canvas):
+        for n in range(0,26):
+            self.lampButtons[n].drawButton(canvas)
+            
+x = OX+6*TGLB_WIDTH + 5*X_GAP - PIN_BTN_SIZE -2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 +TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+PB_RIGHT = list(range(26))
+for n in range(0,26):
+        PB_RIGHT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+        
+x = 5 + 5*TGLB_WIDTH + 5*X_GAP +2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 + TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+PB_LEFT = list(range(26))
+for n in range(0,26):
+        PB_LEFT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+class PinButton:
+    def __init__(self,position,character,cor):
+        self.background = '#DEEBF7'
+        self.position = position
+        self.character = character
+        self.coordinates = cor
+        self.characterCor = [self.coordinates[0][0]+4,(self.coordinates[0][1]+self.coordinates[3][1])/2+4]
+        self.middleLeftCor = [[self.coordinates[0][0] , (self.coordinates[0][1]+self.coordinates[3][1])/2 ],
+                              [self.coordinates[0][0] -6 , (self.coordinates[0][1]+self.coordinates[3][1])/2 ]]
+        
+        self.middleRightCor = [[self.coordinates[1][0] , (self.coordinates[1][1]+self.coordinates[2][1])/2 ],
+                              [self.coordinates[1][0] +6 , (self.coordinates[1][1]+self.coordinates[2][1])/2 ]]
+    def setBackground(self, color):
+        self.background = color
+    def setCoordinates(self,cor, pinNum):
+        self.coordinates = cor
+        self.character = chr(ord('A')+pinNum)
+        self.characterCor = [self.coordinates[0][0]+4,(self.coordinates[0][1]+self.coordinates[3][1])/2+4]
+    def getCoordinates(self):
+        return self.coordinates
+    
+    def setCharacter(self, character):
+        self.character = character
+        
+    def getCharacter(self):
+        return self.character
+    
+    def setPosition(self, pos):
+        self.position = pos
+    def getPosition(self):
+        return self.position
+    def drawButton(self, canvas):
+        if (self.isArea(POSITION)):
+            canvas.draw_polygon(self.coordinates , 2,'#000000','Yellow')
+            canvas.draw_text(str(self.character), self.characterCor, 12, "Black") 
+        else:
+            canvas.draw_polygon(self.coordinates , 2,'#000000',PIN_BTN_COLOR)
+            canvas.draw_text(str(self.character), self.characterCor, 12, "Red")  
+            
+    def isArea(self, point):
+        if(( self.coordinates[0][0] < point[0])):
+            #print("position > x0")
+            if(( self.coordinates[1][0] > point[0])):
+                #print("position < x1")
+                if(self.coordinates[0][1] < point[1]):
+                    #print("position > y0")
+                    if (self.coordinates[3][1] > point[1]):
+                        #print("position < y3")
+                        return True
+                    else:
+                        
+                        return False
+                else:
+                    return False
+            else: 
+                return False
+        else:
+            return False
+class PlugboardUI:
+    def __init__(self, Pb):
+        self.plugboard = Pb
+        self.leftPinButtons = list(range(26))
+        self.rightPinButtons = list(range(26))
+        for n in range(0,26):
+            self.leftPinButtons[n] = PinButton(n, chr(ord('A')+ n ), PB_LEFT[n])
+            self.rightPinButtons[n] = PinButton(n, chr(ord('A')+ n ), PB_RIGHT[n])            
+    
+    def drawPlugBoardUI(self, canvas):
+        for n in range(0,26):
+            self.leftPinButtons[n].drawButton(canvas)
+            self.rightPinButtons[n].drawButton(canvas)
+        
+        for n in range(0,26):
+            #draw pins' connectors
+            canvas.draw_line(self.rightPinButtons[n].middleLeftCor[0], self.rightPinButtons[n].middleLeftCor[1], 2,'#000000')
+            #canvas.draw_line(self.rightPinButtons[n].middleRightCor[0], self.rightPinButtons[n].middleRightCor[1], 2,'#000000')
+            canvas.draw_line(self.leftPinButtons[n].middleRightCor[0], self.leftPinButtons[n].middleRightCor[1], 2,'#000000')
+            #draws link bwtween pins
+            canvas.draw_line(self.rightPinButtons[n].middleLeftCor[1], self.leftPinButtons[self.plugboard.signal(n)].middleRightCor[1], 1,'#000000')
+
+x = OX+5*TGLB_WIDTH + 4*X_GAP - PIN_BTN_SIZE -2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#x = 5+5*TGLB_WIDTH + 4*X_GAP - PIN_BTN_SIZE -2
+#y = 5 +TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2 
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+ETW_RIGHT = list(range(26))
+for n in range(0,26):
+        ETW_RIGHT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+x = OX + 4*TGLB_WIDTH + 4*X_GAP +2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 + TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+ETW_LEFT = list(range(26))
+for n in range(0,26):
+        ETW_LEFT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+class ETW_UI():	
+    def __init__(self):
+        self.leftPinButtons = list(range(26))
+        self.rightPinButtons = list(range(26))
+        for n in range(0,26):
+            self.leftPinButtons[n] = PinButton(n, chr(ord('A') + n ),ETW_LEFT[n])
+            self.rightPinButtons[n] = PinButton(n, chr(ord('A') + n ),ETW_RIGHT[n])
+        
+    def drawETW(self, canvas):
+        for n in range(0,26):
+            self.leftPinButtons[n].drawButton(canvas)
+            self.rightPinButtons[n].drawButton(canvas)
+        
+        for n in range(0,26):
+            #draw right connectors
+            canvas.draw_line(self.rightPinButtons[n].middleLeftCor[0], self.rightPinButtons[n].middleLeftCor[1], 2,'#000000')
+            #draw left connectors
+            canvas.draw_line(self.leftPinButtons[n].middleRightCor[0], self.leftPinButtons[n].middleRightCor[1], 2,'#000000')
+            #draw link betwee pins
+            canvas.draw_line(self.rightPinButtons[n].middleLeftCor[1], self.leftPinButtons[n].middleRightCor[1], 1,'#000000')
+x = 5+4*TGLB_WIDTH + 3*X_GAP - PIN_BTN_SIZE -2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 +TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2 
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+RT3_RIGHT = list(range(26))
+for n in range(0,26):
+        RT3_RIGHT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+x = 5 + 3*TGLB_WIDTH + 3*X_GAP +2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 + TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+RT3_LEFT = list(range(26))
+for n in range(0,26):
+        RT3_LEFT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+
+x = 5+3*TGLB_WIDTH + 2*X_GAP - PIN_BTN_SIZE -2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 +TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2 
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+RT2_RIGHT = list(range(26))
+for n in range(0,26):
+        RT2_RIGHT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+        
+x = 5 + 2*TGLB_WIDTH + 2*X_GAP +2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 + TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+RT2_LEFT = list(range(26))
+for n in range(0,26):
+        RT2_LEFT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+
+x = 5+2*TGLB_WIDTH + X_GAP - PIN_BTN_SIZE -2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 +TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2 
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+RT1_RIGHT = list(range(26))
+for n in range(0,26):
+        RT1_RIGHT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+        
+x = 5 + TGLB_WIDTH + X_GAP +2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 + TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+RT1_LEFT = list(range(26))
+for n in range(0,26):
+        RT1_LEFT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]  
+#rotor's shifting up button and shifting down button
+RT3_ARROWS = list(range(2))
+x1 = OX + 3*TGLB_WIDTH + 3*X_GAP + int(TGLB_WIDTH/2)
+y1 = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + Y_GAP + 6
+#y1 = 5 +  TGLB_HEIGHT + Y_GAP + 6
+
+x2 = x1 + 10
+y2 = y1 + 12
+
+x3 = x1 -10
+y3 = y1 +12
+RT3_ARROWS[0] = [[x1,y1], [x2,y2], [x3,y3]]
+
+x1 = 5 + 3*TGLB_WIDTH + 3*X_GAP + int(TGLB_WIDTH/2)
+y1 = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + TGLB_HEIGHT+ CHIAN_H - 6
+
+x2 = x1 + 10
+y2 = y1 - 12
+
+x3 = x1 -10
+y3 = y1 -12
+RT3_ARROWS[1] = [[x1,y1], [x2,y2], [x3,y3]]
+#Rootor 2
+RT2_ARROWS = list(range(2))
+x1 = 5 + 2*TGLB_WIDTH + 2*X_GAP + int(TGLB_WIDTH/2)
+y1 = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + Y_GAP + 6
+
+x2 = x1 + 10
+y2 = y1 + 12
+
+x3 = x1 -10
+y3 = y1 +12
+RT2_ARROWS[0] = [[x1,y1], [x2,y2], [x3,y3]]
+
+x1 = 5 + 2*TGLB_WIDTH + 2*X_GAP + int(TGLB_WIDTH/2)
+y1 = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + TGLB_HEIGHT+ CHIAN_H - 6
+
+x2 = x1 + 10
+y2 = y1 - 12
+
+x3 = x1 -10
+y3 = y1 -12
+RT2_ARROWS[1] = [[x1,y1], [x2,y2], [x3,y3]]
+#Rootor 1
+RT1_ARROWS = list(range(2))
+x1 = 5 + TGLB_WIDTH + X_GAP + int(TGLB_WIDTH/2)
+y1 = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + Y_GAP + 6
+
+x2 = x1 + 10
+y2 = y1 + 12
+
+x3 = x1 -10
+y3 = y1 +12
+RT1_ARROWS[0] = [[x1,y1], [x2,y2], [x3,y3]]
+
+x1 = 5 + TGLB_WIDTH + X_GAP + int(TGLB_WIDTH/2)
+y1 = (OY + 2*TGLB_HEIGHT+3*Y_GAP) + TGLB_HEIGHT+ CHIAN_H - 6
+
+x2 = x1 + 10
+y2 = y1 - 12
+
+x3 = x1 -10
+y3 = y1 -12
+RT1_ARROWS[1] = [[x1,y1], [x2,y2], [x3,y3]]
+
+RT_ARROWS = [RT1_ARROWS,RT2_ARROWS,RT3_ARROWS]
+
+x = 5 + TGLB_WIDTH-PIN_BTN_SIZE -2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 + TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]       
+REFT_RIGHT = list(range(26))
+for n in range(0,26):
+        REFT_RIGHT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+        
+x = 5+2
+y = (OY + 2*TGLB_HEIGHT+3*Y_GAP)+TGLB_HEIGHT + CHIAN_H + Y_GAP - PIN_BTN_SIZE -2
+#y = 5 + TGLB_HEIGHT + CHIAN_H+Y_GAP - PIN_BTN_SIZE -2
+X1 = [x,y]
+X2 = [x + PIN_BTN_SIZE, y]
+X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+X4 = [x, y + PIN_BTN_SIZE]
+REFT_LEFT = list(range(26))
+for n in range(0,26):
+        REFT_LEFT[n] = [X1, X2, X3, X4]
+        #x = x-PIN_BTN_SIZE
+        y = y - PIN_BTN_SIZE
+        X1 = [x,y]
+        X2 = [x + PIN_BTN_SIZE, y]
+        X3 = [x + PIN_BTN_SIZE, y + PIN_BTN_SIZE]
+        X4 = [x, y + PIN_BTN_SIZE]
+
+class RotorUI():
+    def __init__(self, rotor,rightPins, leftPins, ARROW_BUTTONS):
+        self.rotor = rotor
+        self.leftPinButtons = list(range(26))
+        self.rightPinButtons = list(range(26))
+        self.topArrowButton = ARROW_BUTTONS[0]
+        self.bottomArrowButton = ARROW_BUTTONS[1]
+        self.arrowColor = ["#2D2DCF","#2D2DCF"]
+        self.arrowBorderColor = ['#1A1A67','#1A1A67']
+        for n in range(0,26):
+            self.rightPinButtons[n] = PinButton(self.rotor.display_map[chr(ord('A') + n )], chr(ord('A') + n ),rightPins[n])
+            self.leftPinButtons[n] = PinButton(self.rotor.display_map[chr(ord('A') + n )], chr(ord('A') + n ),leftPins[n])
+    def drawRotor(self, canvas):
+        for n in range(0,26):
+            self.leftPinButtons[n].drawButton(canvas)
+            self.rightPinButtons[n].drawButton(canvas)
+            
+        for n in range(0,26):
+            #draw pins' connectors
+            canvas.draw_line(self.rightPinButtons[n].middleLeftCor[0], self.rightPinButtons[n].middleLeftCor[1], 2,'#000000')
+            canvas.draw_line(self.leftPinButtons[n].middleRightCor[0], self.leftPinButtons[n].middleRightCor[1], 2,'#000000')
+            #draws link bwtween pins
+            canvas.draw_line(self.rightPinButtons[n].middleLeftCor[1], self.leftPinButtons[self.rotor.signal_in(n)].middleRightCor[1], 1,'#000000')
+            #draw notch
+            if self.rightPinButtons[n].getCharacter() in self.rotor.step_set:
+                canvas.draw_line(self.rightPinButtons[n].middleLeftCor[1], self.leftPinButtons[n].middleRightCor[1], 6,'Red')
+        #draw up and down arrows
+        self.drawTopArrow(canvas)
+        self.drawBottomArrow(canvas)
+        
+    def shiftDown(self):
+        tmpPos = self.rightPinButtons[0].getPosition()
+        tmpChar = self.rightPinButtons[0].getCharacter()
+        for n in range(0,25):
+            self.rightPinButtons[n].setPosition(self.rightPinButtons[n+1].getPosition())
+            self.rightPinButtons[n].setCharacter(self.rightPinButtons[n+1].getCharacter())
+            
+            self.leftPinButtons[n].setPosition(self.leftPinButtons[n+1].getPosition())
+            self.leftPinButtons[n].setCharacter(self.leftPinButtons[n+1].getCharacter())
+        
+        self.rightPinButtons[25].setPosition(tmpPos)
+        self.rightPinButtons[25].setCharacter(tmpChar)
+        
+        self.leftPinButtons[25].setPosition(tmpPos)
+        self.leftPinButtons[25].setCharacter(tmpChar)
+    def shiftDowns(self,n):
+        for i in range(0,n):
+            self.shiftDown()
+    def shiftUp(self):
+        tmpPos = self.rightPinButtons[25].getPosition()
+        tmpChar = self.rightPinButtons[25].getCharacter()
+        for n in range(25,0,-1):
+            self.rightPinButtons[n].setPosition(self.rightPinButtons[n-1].getPosition())
+            self.rightPinButtons[n].setCharacter(self.rightPinButtons[n-1].getCharacter())
+            
+            self.leftPinButtons[n].setPosition(self.leftPinButtons[n-1].getPosition())
+            self.leftPinButtons[n].setCharacter(self.leftPinButtons[n-1].getCharacter())
+        
+        self.rightPinButtons[0].setPosition(tmpPos)
+        self.rightPinButtons[0].setCharacter(tmpChar)
+        
+        self.leftPinButtons[0].setPosition(tmpPos)
+        self.leftPinButtons[0].setCharacter(tmpChar)
+    def shiftUps(self,n):
+        for i in range(0,n):
+            self.shiftUp()
+    def drawTopArrow(self,canvas):
+        canvas.draw_polygon(self.topArrowButton, 1, self.arrowBorderColor[0],self.arrowColor[0])
+
+    def drawBottomArrow(self, canvas):
+        canvas.draw_polygon(self.bottomArrowButton, 1, self.arrowBorderColor[1],self.arrowColor[1])
+    def isArea(self,coordinates,point):
+        if(( coordinates[0][0] < point[0])):
+            #print("position > x0")
+            if(( coordinates[1][0] > point[0])):
+                #print("position < x1")
+                if(coordinates[0][1] < point[1]):
+                    #print("position > y0")
+                    if (coordinates[3][1] > point[1]):
+                        #print("position < y3")
+                        return True
+                    else:
+                        
+                        return False
+                else:
+                    return False
+            else: 
+                return False
+        else:
+            return False
+        
+class ReflectorUI():
+    def __init__(self, reflector, rightPins, leftPins):
+        self.reflector = reflector
+        self.leftPinButtons = list(range(26))
+        self.rightPinButtons = list(range(26))
+        for n in range(0,26):
+            #pin = (n + self.rotor.pos) % 26
+            self.rightPinButtons[n] = PinButton(self.reflector.display_map[chr(ord('A') + n )], chr(ord('A') + n ),rightPins[n])
+            self.leftPinButtons[n] = PinButton(self.reflector.display_map[chr(ord('A') + n )], chr(ord('A') + n ),leftPins[n])
+    
+    def drawReflector(self, canvas):
+        for n in range(0,26):
+            self.leftPinButtons[n].drawButton(canvas)
+            self.rightPinButtons[n].drawButton(canvas)
+
+        for n in range(0,26):
+            #draw pins' connectors
+            canvas.draw_line(self.rightPinButtons[n].middleLeftCor[0], self.rightPinButtons[n].middleLeftCor[1], 2,'#000000')
+            canvas.draw_line(self.leftPinButtons[n].middleRightCor[0], self.leftPinButtons[n].middleRightCor[1], 2,'#000000')
+            #draws direct links
+            canvas.draw_line(self.rightPinButtons[n].middleLeftCor[1], self.leftPinButtons[n].middleRightCor[1], 1,'#000000')  
+
+KEYBOARD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+KEYBOARD_SET = set(KEYBOARD_CHARS)     
+class EnigmaMachine:
+    #"""Top-level class for the Enigma Machine simulation."""
+
+    def __init__(self, rotors, reflector, plugboard):
+        #"""Configures the Enigma Machine. Parameters are as follows:
+
+        #rotors - a list containing 3 or 4 (for the Kriegsmarine M4 version)
+        #Rotor objects. The order of the list is important. The first rotor is
+        #the left-most rotor, and the last rotor is the right-most (from the
+        #operator's perspective sitting at the machine).
+
+        #reflector - a rotor object to represent the reflector (UKW)
+
+        #plugboard - a plugboard object to represent the state of the plugboard
+
+        #Note that on the military Enigma machines we are simulating, the entry
+        #wheel is a simple straight-pass through and is not simulated here. It
+        #would not be too hard to add a parameter for the entry wheel and pass a
+        #Rotor object for it if it is desired to simulate a non-military Enigma
+        #machine.
+
+        #"""
+        if len(rotors) not in [3, 4]:
+            raise EnigmaError("Must supply 3 or 4 rotors")
+
+        self.rotors = rotors
+        self.rotor_count = len(rotors)
+        self.reflector = reflector
+        self.plugboard = plugboard
+        self.plug_in = [0,0]
+        self.rotors_in = [[0,0],[0,0],[0,0]]
+        self.reflector_in = [0,0]
+        self.plug_out = [0,0]
+        self.rotors_out = [[0,0],[0,0],[0,0]]
+        self.reflector_out = [0,0]
+    def set_display(self, val):
+        #"""Sets the rotor operator windows to 'val'.
+
+        #'val' must be a string or iterable containing values for each window
+        #from left to right.
+
+        #"""
+        if len(val) != self.rotor_count:
+            raise EnigmaError("Incorrect length for display value")
+        #print(self.rotors[2].name)
+        for i in range(len(self.rotors)-1, -1, -1):
+            #print(self.rotors[i].name)
+            if i == 2:
+                self.rotors[i].set_display(val[-1])
+            elif i == 1:
+                self.rotors[i].set_display(val[-2])
+            else:
+                self.rotors[i].set_display(val[-3])
+    def get_display(self):
+        #"""Returns the operator display as a string."""
+        
+        return [self.rotors[-3].get_display(),self.rotors[-2].get_display(),self.rotors[-1].get_display()]
+
+    def key_press(self, key):
+        #"""Simulate a front panel key press. 
+
+        #key - a string representing the letter pressed
+
+        #The rotors are stepped by simulating the mechanical action of the
+        #machine. 
+        #Next a simulated current is run through the machine.
+        #The lamp that is lit by this key press is returned as a string.
+
+        #"""
+        if key not in KEYBOARD_SET:
+            raise EnigmaError('illegal key press %s' % key)
+
+        # simulate the mechanical action of the machine
+        self._step_rotors()
+
+        # simulate the electrical operations:
+        signal_num = ord(key) - ord('A')
+        #print("Signal is: "+key)
+        #print("Signal Number:"+str(signal_num))
+        lamp_num = self._electric_signal(signal_num)
+        return KEYBOARD_CHARS[lamp_num]
+
+    def _step_rotors(self):
+        #"""Simulate the mechanical action of pressing a key."""
+        
+        # The right-most rotor's right-side ratchet is always over a pawl, and
+        # it has no neighbor to the right, so it always rotates.
+        #
+        # The middle rotor will rotate if either:
+        #   1) The right-most rotor's left side notch is over the 2nd pawl
+        #       or
+        #   2) It has a left-side notch over the 3rd pawl
+        #
+        # The third rotor (from the right) will rotate only if the middle rotor
+        # has a left-side notch over the 3rd pawl.
+        #
+        # Kriegsmarine model M4 has 4 rotors, but the 4th rotor (the leftmost)
+        # does not rotate (they did not add a 4th pawl to the mechanism).
+
+        rotor1 = self.rotors[-1]
+        rotor2 = self.rotors[-2]
+        rotor3 = self.rotors[-3]
+
+        # decide which rotors can move
+        rotate2 = rotor1.notch_over_pawl() or rotor2.notch_over_pawl()
+        rotate3 = rotor2.notch_over_pawl()
+
+        # move rotors
+        rotor1.rotate()
+        if rotate2:
+            rotor2.rotate()
+        if rotate3:
+            rotor3.rotate()
+
+    def _electric_signal(self, signal_num):
+        #"""Simulate running an electric signal through the machine in order to
+        #perform an encrypt or decrypt operation
+
+        #signal_num - the wire (0-25) that the simulated current occurs on
+
+        #Returns a lamp number to light (an integer 0-25).
+
+        #"""
+        self.plug_in[0] = signal_num
+        pos = self.plugboard.signal(signal_num)
+        self.plug_in[1] = pos
+        #print(str(chr(ord('A')+signal_num))+": Plugboard look up: "+str(chr(ord('A')+pos)))
+        #print("Postion is: "+str(pos))
+        for i in range(len(self.rotors)-1 , -1, -1):
+            self.rotors_in[i][0] = pos
+            pos = self.rotors[i].signal_in(pos)
+            self.rotors_in[i][1] = pos
+        #for rotor in reversed(self.rotors):
+            #pos = rotor.signal_in(pos)
+        self.reflector_in[0] = pos
+        self.reflector_in[1] = pos
+        pos = self.reflector.signal_in(pos)
+        self.reflector_out[0] = pos
+        self.reflector_out[1] = pos
+        #print("After Reflection....")
+        #print("Going back....")
+        for i in range(0,len(self.rotors)):
+            self.rotors_out[i][0] = pos
+            pos = self.rotors[i].signal_out(pos)
+            self.rotors_out[i][1] = pos
+            
+        self.plug_out[0] = pos
+        self.plug_out[1] = self.plugboard.signal(pos)
+        return self.plugboard.signal(pos)
+
+    def process_text(self, text, replace_char='X'):
+        #"""Run the text through the machine, simulating a key press for each
+        #letter in the text.
+
+        #text - the text to process. Note that the text is converted to upper
+        #case before processing.
+
+        #replace_char - if text contains a character not on the keyboard, replace
+        #it with replace_char; if replace_char is None the character is dropped
+        #from the message
+
+        #"""
+        result = []
+        for key in text:
+            c = key.upper()
+
+            if c not in KEYBOARD_SET: 
+                if replace_char:
+                    c = replace_char
+                else:
+                    continue    # ignore it
+
+            result.append(self.key_press(c))
+
+        return ''.join(result)
+
+    def get_rotor_counts(self):
+        #"""Return the rotor rotation counts as a list of integers."""
+        return [r.rotations for r in self.rotors]   
+
+Pub = Plugboard(PLUG_SETTING)
+PubUI = PlugboardUI(Pub)
+rotor = list(range(3))
+rotor[0] = Rotor('my rotor1', ROTORS[RINGS[0]]['wiring'], ring_setting=RING_SETTING[0], stepping= ROTORS[RINGS[0]]['stepping'])
+rotor[1] = Rotor('my rotor2', ROTORS[RINGS[1]]['wiring'], ring_setting=RING_SETTING[1], stepping= ROTORS[RINGS[1]]['stepping'])
+rotor[2] = Rotor('my rotor3', ROTORS[RINGS[2]]['wiring'], ring_setting=RING_SETTING[2], stepping= ROTORS[RINGS[2]]['stepping'])
+reflector = Rotor('my reflector', REFLECTORS[REFLECTOR_SETTING])
+rotorUI  = list(range(3))
+rotorUI[0] = RotorUI(rotor[0], RT1_RIGHT, RT1_LEFT,RT1_ARROWS)
+rotorUI[1] = RotorUI(rotor[1], RT2_RIGHT, RT2_LEFT,RT2_ARROWS)
+rotorUI[2]= RotorUI(rotor[2], RT3_RIGHT, RT3_LEFT,RT3_ARROWS)
+
+reflectorUI = ReflectorUI(reflector, REFT_RIGHT,REFT_LEFT)
+
+enigma = EnigmaMachine([rotor[0], rotor[1], rotor[2]], reflector, Pub)
+
+# Create a frame and assign callbacks to event handlers
+frame = simplegui.create_frame("Enigma Machine", 1000, 620)
+frame.set_canvas_background('#EEEEEE')
+#plugSettingObject = frame.add_input('Plugboard Setting', input_plugsetting, 216)
+#plugSettingObject.set_text("")
+#ringsObject = frame.add_input('Rings:', input_rings, 216)
+#ringsObject.set_text(RINGS[0]+" "+RINGS[1]+" "+RINGS[2])
+#ringsettingObject = frame.add_input('Ring Setting:', input_ringsetting, 216)
+#ringsettingObject.set_text(str(RING_SETTING[0])+" "+str(RING_SETTING[1])+" "+str(RING_SETTING[2]))
+#displayObject = frame.add_input('Display:', input_display, 216)
+#displayObject.set_text(enigma.get_display()[0]+" "+enigma.get_display()[1]+" "+enigma.get_display()[2])
+#displayObject.set_text(DISPLAY[0]+" "+DISPLAY[1]+" "+DISPLAY[2])
+#inputObject =  frame.add_input('Input:',input_string, 216)
+#outObject = frame.add_input('Output', output_string, 216)
+#outObject.set_text(OUTPUT_CHR)
+#mousedragObject = frame.set_mousedrag_handler(mousedrag_handler)
+#arrowTimer = simplegui.create_timer(1000, rotorUI3.clickTopArrow())
+#frame.add_button("Reset", reset_enigma)
+#label2 = frame.add_label('WARNING:', 200)
+frame.set_mouseclick_handler(mouse_handler)
+frame.set_draw_handler(draw)
+
+# Start the frame animation
+frame.start()
+####################################################################################################
+# PASTE YOUR PYTHON CODE ABOVE
+####################################################################################################
+*/}).toString().match(/[^]*\/\*([^]*)\*\/\}$/)[1]);
+})();
+</script>
+
+<script src="js/main.js"></script>
+<style id="embedskulptor_css">
+	body{margin: 0px auto;padding:0px;}
+	.embedskulptor-frame{
+		display:inline-block;
+		vertical-align:top;
+		#overflow:hidden;
+	}
+	.embedskulptor-gui-class{border: 0px solid #cccccc;background: #ffffff;}
+	.embedskulptor-console-class{border: 0px dotted #cccccc;}
+	.embedskulptor-code-class{border: 0px dashed #cccccc;}
+	#embedskulptor_gui_frame{
+		display: none;
+		#z-index:-2000;
+		#border:solid green 1px;
+		height:710px;
+                #position: relative;
+                margin-left:4%;
+		#background: #EEEEEE;
+	}
+	#embedskulptor_gui{
+		display: none;
+		#border:solid red 1px;
+		#background-color:rgb(170,170,170);
+		#background: #DEDEDE;
+		width:1280px;
+		#height:556px;
+		height:700px;
+		position: relative;
+		#left:-120px;
+		#z-index:-1000;
+	}
+	#embedskulptor_console_frame{display:none;}
+	#embedskulptor_console{margin:0;overflow:scroll;width:800px;height:420px;display:none;}
+	#embedskulptor_code_frame{display:none;}
+	#embedskulptor_code{width:800px;height:420px;display:none; display:block}
+</style>
+</body>
+</html>
